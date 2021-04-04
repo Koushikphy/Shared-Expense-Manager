@@ -30,3 +30,38 @@ const List daily = [
     "price": "\$1200.00"
   }
 ];
+
+const List expenses = [
+  {
+    "date": "01-03-2021",
+    "person": "Satyam",
+    "item": "Oil",
+    "category": "Food",
+    "amount": "290",
+    "shareBy": "All"
+  },
+  {
+    "date": "01-03-2021",
+    "person": "Joy",
+    "item": "Misc",
+    "category": "Food",
+    "amount": "220",
+    "shareBy": "Koushik"
+  },
+  {
+    "date": "02-03-2021",
+    "person": "Joy",
+    "item": "Misc",
+    "category": "Food",
+    "amount": "200",
+    "shareBy": "Satyam"
+  },
+  {
+    "date": "02-03-2021",
+    "person": "Koushik",
+    "item": "Chanachur",
+    "category": "Food",
+    "amount": "64",
+    "shareBy": "All"
+  },
+];
