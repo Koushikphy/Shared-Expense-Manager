@@ -16,11 +16,11 @@ class RootApp extends StatefulWidget {
 class _RootAppState extends State<RootApp> {
   int pageIndex = 0;
   List<Widget> pages = [
-    // DailyPage(),
+    DailyPage(),
     StatsPage(),
     BudgetPage(),
     ProfilePage(),
-    // CreatBudgetPage()
+    CreatBudgetPage()
   ];
 
   @override
