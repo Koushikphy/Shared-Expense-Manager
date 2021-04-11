@@ -1,37 +1,16 @@
-const List daily = [
-  {
-    "icon": "assets/images/bank.png",
-    "name": "Bank",
-    "date": "Fri 10AM",
-    "price": "340.00"
-  },
-  {
-    "icon": "assets/images/auto.png",
-    "name": "Auto",
-    "date": "Mon 8AM",
-    "price": "70.00"
-  },
-  {
-    "icon": "assets/images/gift.png",
-    "name": "Gift",
-    "date": "Sat 6PM",
-    "price": "110.00"
-  },
-  {
-    "icon": "assets/images/eating.png",
-    "name": "Eating",
-    "date": "Sun 5PM",
-    "price": "60.00"
-  },
-  {
-    "icon": "assets/images/charity.png",
-    "name": "Charity",
-    "date": "Wed 12PM",
-    "price": "1200.00"
-  }
-];
+void calculateShares() {
+  print("1234");
+}
 
-const List expenses = [
+var users = ["Koushik", "Satyam", "Joy"];
+
+var expenseStats = {
+  "Total Spends": [12, 30, 44], // in order of user list
+  "Total Owe": [11, 50, 74],
+  "Net Owe": [10, 55, 99]
+};
+
+List expenses = [
   {
     "date": "01-03-2021",
     "person": "Satyam",
@@ -43,7 +22,7 @@ const List expenses = [
   {
     "date": "01-03-2021",
     "person": "Joy",
-    "item": "Misc hellow world ugyugyugugyugyugyugyu",
+    "item": "Misc hellow world ugyugyugu yugyugyugyu",
     "category": "Food",
     "amount": "220",
     "shareBy": "Koushik"

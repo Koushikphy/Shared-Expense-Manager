@@ -1,4 +1,4 @@
-import 'package:budget_tracker_ui/pages/budget_page.dart';
+// import 'package:budget_tracker_ui/pages/budget_page.dart';
 import 'package:budget_tracker_ui/pages/create_budge_page.dart';
 import 'package:budget_tracker_ui/pages/daily_page.dart';
 import 'package:budget_tracker_ui/pages/profile_page.dart';
@@ -7,6 +7,7 @@ import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+// import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -15,17 +16,9 @@ class RootApp extends StatefulWidget {
 
 class _RootAppState extends State<RootApp> {
   int pageIndex = 0;
-  List<Widget> pages = [
-    DailyPage(),
-    StatsPage(),
-    BudgetPage(),
-    ProfilePage(),
-    CreatBudgetPage()
-  ];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -37,11 +30,40 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: getBody(),
-        bottomNavigationBar: getFooter(),
+        body: IndexedStack(
+          index: pageIndex,
+          children: [
+            DailyPage(),
+            StatsPage(),
+            // BudgetPage(),
+            ProfilePage(),
+            CreatBudgetPage()
+          ],
+        ),
+        bottomNavigationBar: AnimatedBottomNavigationBar(
+          activeColor: primary,
+          splashColor: secondary,
+          inactiveColor: Colors.black.withOpacity(0.5),
+          icons: [
+            Ionicons.md_calendar,
+            Ionicons.md_stats,
+            // Ionicons.md_wallet,
+            Ionicons.ios_person,
+          ],
+          activeIndex: pageIndex,
+          // gapLocation: GapLocation.end,
+          notchSmoothness: NotchSmoothness.softEdge,
+          // leftCornerRadius: 10,
+          iconSize: 30,
+          // rightCornerRadius: 10,
+          onTap: (index) {
+            selectedTab(index);
+          },
+          //other params
+        ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
-              selectedTab(4);
+              selectedTab(3);
             },
             child: Icon(
               Icons.add,
@@ -50,41 +72,7 @@ class _RootAppState extends State<RootApp> {
             backgroundColor: Colors.pink
             //params
             ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.centerDocked);
-  }
-
-  Widget getBody() {
-    return IndexedStack(
-      index: pageIndex,
-      children: pages,
-    );
-  }
-
-  Widget getFooter() {
-    List<IconData> iconItems = [
-      Ionicons.md_calendar,
-      Ionicons.md_stats,
-      Ionicons.md_wallet,
-      Ionicons.ios_person,
-    ];
-
-    return AnimatedBottomNavigationBar(
-      activeColor: primary,
-      splashColor: secondary,
-      inactiveColor: Colors.black.withOpacity(0.5),
-      icons: iconItems,
-      activeIndex: pageIndex,
-      gapLocation: GapLocation.center,
-      notchSmoothness: NotchSmoothness.softEdge,
-      leftCornerRadius: 10,
-      iconSize: 30,
-      rightCornerRadius: 10,
-      onTap: (index) {
-        selectedTab(index);
-      },
-      //other params
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked);
   }
 
   selectedTab(index) {
