@@ -1,7 +1,7 @@
-import 'package:budget_tracker_ui/json/create_budget_json.dart';
+// import 'package:budget_tracker_ui/json/create_budget_json.dart';
 import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+// import 'package:flutter_icons/flutter_icons.dart';
 
 class CreatBudgetPage extends StatefulWidget {
   @override
@@ -45,7 +45,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Budget",
+                        "New Item Entry",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -57,78 +57,6 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
               ),
             ),
           ),
-          SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "budget name",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
-                      color: Color(0xff67727d)),
-                ),
-                TextField(
-                  controller: _budgetName,
-                  cursorColor: black,
-                  style: TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.bold, color: black),
-                  decoration: InputDecoration(
-                      hintText: "Enter Budget Name", border: InputBorder.none),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: (size.width - 140),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Enter budget",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13,
-                                color: Color(0xff67727d)),
-                          ),
-                          TextField(
-                            controller: _budgetPrice,
-                            cursorColor: black,
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: black),
-                            decoration: InputDecoration(
-                                hintText: "Enter Budget",
-                                border: InputBorder.none),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: primary,
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: white,
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )
         ],
       ),
     );

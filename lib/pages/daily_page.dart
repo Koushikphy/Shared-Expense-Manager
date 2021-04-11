@@ -80,17 +80,29 @@ class _DailyPageState extends State<DailyPage> {
                               children: [
                                 Text(expenses[i]['item'],
                                     style: TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 17,
                                         color: black,
                                         fontWeight: FontWeight.w500),
                                     overflow: TextOverflow.ellipsis),
-                                Text(
-                                  expenses[i]['person'],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 13,
-                                    //color: Colors.green
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      expenses[i]['person'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 15,
+                                        //color: Colors.green
+                                      ),
+                                    ),
+                                    SizedBox(width: 15),
+                                    // Text(
+                                    //   expenses[i]['shareBy'],
+                                    //   style: TextStyle(
+                                    //       fontWeight: FontWeight.w300,
+                                    //       fontSize: 13,
+                                    //       color: Colors.blue),
+                                    // ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -108,7 +120,7 @@ class _DailyPageState extends State<DailyPage> {
                                     expenses[i]['amount'],
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 15,
+                                        fontSize: 17,
                                         color: Colors.green),
                                   ),
                                   SizedBox(height: 5),

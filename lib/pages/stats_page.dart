@@ -4,7 +4,7 @@ import 'package:budget_tracker_ui/theme/colors.dart';
 // import 'package:budget_tracker_ui/widget/chart.dart';
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 // import 'package:fl_chart/fl_chart.dart';
 
 class StatsPage extends StatefulWidget {
@@ -57,15 +57,17 @@ class _StatsPageState extends State<StatsPage> {
               ),
             ),
           ),
-          makeStatCrad("Total Spends", Colors.pink),
-          makeStatCrad("Total Owe", Colors.green),
-          makeStatCrad("Net Owe", Colors.purple),
+          makeStatCrad(
+              "Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
+          makeStatCrad(
+              "Total Owe", Colors.green, MaterialIcons.account_balance),
+          makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
         ],
       ),
     );
   }
 
-  Padding makeStatCrad(String cardType, color) {
+  Padding makeStatCrad(String cardType, color, icon) {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.all(10),
@@ -92,6 +94,10 @@ class _StatsPageState extends State<StatsPage> {
                     children: [
                       Row(
                         children: [
+                          Icon(icon),
+                          SizedBox(
+                            width: 10,
+                          ),
                           Text(
                             cardType,
                             style: TextStyle(
@@ -161,6 +167,4 @@ class _StatsPageState extends State<StatsPage> {
       ),
     );
   }
-
-
 }

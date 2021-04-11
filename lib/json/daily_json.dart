@@ -46,7 +46,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "Chanachur",
+    "item": "abcd",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -54,7 +54,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "Chanachur",
+    "item": "fhweio",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -62,7 +62,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "Chanachur",
+    "item": "iw3heo",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -70,7 +70,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "Chanachur",
+    "item": "feji",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -78,7 +78,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "Chanachur",
+    "item": "yyuv",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
