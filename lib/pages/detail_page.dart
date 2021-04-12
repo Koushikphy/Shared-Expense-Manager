@@ -35,6 +35,12 @@ class DetailLog extends StatelessWidget {
           TextButton(
               onPressed: () {},
               child: Icon(
+                Icons.save,
+                color: Colors.white,
+              )),
+          TextButton(
+              onPressed: () {},
+              child: Icon(
                 Icons.delete,
                 color: Colors.white,
               )),
@@ -69,17 +75,6 @@ class DetailLog extends StatelessWidget {
                     .toList(),
                 onChanged: (val) => print(val),
               ),
-              // TextFormField(
-              //   autovalidateMode: AutovalidateMode.always,
-              //   initialValue: expenses[index]['person'],
-              //   decoration: const InputDecoration(
-              //     icon: Icon(Icons.person_outline),
-              //     hintText: 'Who spent the money?',
-              //     labelText: "Spent By",
-              //   ),
-              //   onSaved: (String value) {},
-              // ),
-              // SizedBox(height: 15),
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,
                 initialValue: expenses[index]['amount'],
@@ -124,7 +119,7 @@ class DetailLog extends StatelessWidget {
                     color: Colors.black.withOpacity(.6),
                   ),
                   Container(
-                    width: size.width * .8,
+                    width: size.width * .82,
                     child: MultiSelectFormField(
                       autovalidate: false,
                       chipBackGroundColor: Colors.deepPurple.shade200,

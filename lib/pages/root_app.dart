@@ -48,7 +48,7 @@ class _RootAppState extends State<RootApp> {
             Ionicons.md_calendar,
             Ionicons.md_stats,
             // Ionicons.md_wallet,
-            Ionicons.ios_person,
+            Ionicons.md_settings,
           ],
           activeIndex: pageIndex,
           // gapLocation: GapLocation.end,

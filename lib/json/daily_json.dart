@@ -2,6 +2,8 @@ void calculateShares() {
   print("1234");
 }
 
+var categories = ["Bills", "Food", "Misc"];
+
 var users = ["Koushik", "Satyam", "Joy"];
 
 var expenseStats = {
@@ -14,7 +16,7 @@ List expenses = [
   {
     "date": "01-03-2021",
     "person": "Satyam",
-    "item": "Oil",
+    "item": "Groceries",
     "category": "Food",
     "amount": "290",
     "shareBy": "All"
@@ -22,7 +24,7 @@ List expenses = [
   {
     "date": "01-03-2021",
     "person": "Joy",
-    "item": "Misc hellow world ugyugyugu yugyugyugyu",
+    "item": "Milk",
     "category": "Food",
     "amount": "220",
     "shareBy": "Koushik"
@@ -38,7 +40,15 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "Chanachur",
+    "item": "Rent",
+    "category": "Bills",
+    "amount": "64",
+    "shareBy": "All"
+  },
+  {
+    "date": "02-03-2021",
+    "person": "Koushik",
+    "item": "Gas",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -46,7 +56,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "abcd",
+    "item": "Water",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -54,7 +64,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "fhweio",
+    "item": "Vegetables",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"
@@ -62,23 +72,7 @@ List expenses = [
   {
     "date": "02-03-2021",
     "person": "Koushik",
-    "item": "iw3heo",
-    "category": "Food",
-    "amount": "64",
-    "shareBy": "All"
-  },
-  {
-    "date": "02-03-2021",
-    "person": "Koushik",
-    "item": "feji",
-    "category": "Food",
-    "amount": "64",
-    "shareBy": "All"
-  },
-  {
-    "date": "02-03-2021",
-    "person": "Koushik",
-    "item": "yyuv",
+    "item": "Misc",
     "category": "Food",
     "amount": "64",
     "shareBy": "All"

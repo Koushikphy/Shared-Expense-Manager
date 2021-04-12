@@ -46,7 +46,7 @@ class _DailyPageState extends State<DailyPage> {
                         fontWeight: FontWeight.bold,
                         color: Colors.deepOrange.shade800),
                   ),
-                  Icon(AntDesign.search1)
+                  // Icon(AntDesign.search1)
                 ],
               ),
             ),
