@@ -67,11 +67,14 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Padding makeStatCrad(String cardType, color, icon) {
+  Padding makeStatCrad(String cardType, MaterialColor color, IconData icon) {
     var size = MediaQuery.of(context).size;
+    print(color.runtimeType);
+    print(icon.runtimeType);
     return Padding(
       padding: EdgeInsets.all(10),
       child: Card(
+        elevation: 5.0,
         child: Container(
           decoration: BoxDecoration(
               color: white,

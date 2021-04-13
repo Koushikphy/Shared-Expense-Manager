@@ -1,49 +1,46 @@
+// import 'package:budget_tracker_ui/json/create_budget_json.dart';
 import 'package:budget_tracker_ui/json/daily_json.dart';
-// import 'package:budget_tracker_ui/json/day_month.dart';
-// import 'package:budget_tracker_ui/theme/colors.dart';
+import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_icons/flutter_icons.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
-// import 'package:search_choices/search_choices.dart';
 import 'package:select_form_field/select_form_field.dart';
-// import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
-
-class Animal {
-  final int id;
-  final String name;
-
-  Animal({
-    this.id,
-    this.name,
-  });
-}
 
 class DetailLog extends StatelessWidget {
   final int index;
+
   DetailLog({Key key, @required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    var data = expenses[index];
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange.shade400,
+        backgroundColor: secondary,
         actions: [
-          TextButton(
-              onPressed: () {},
-              child: Icon(
-                Icons.save,
-                color: Colors.white,
-              )),
-          TextButton(
-              onPressed: () {},
-              child: Icon(
-                Icons.delete,
-                color: Colors.white,
-              )),
+          IconButton(
+            onPressed: () {
+              print(data);
+            },
+            icon: Icon(Icons.save),
+            color: Colors.white,
+            tooltip: "Save ",
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.delete),
+            color: Colors.white,
+            tooltip: "Delete",
+          ),
+          SizedBox(
+            width: 20,
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -60,6 +57,10 @@ class DetailLog extends StatelessWidget {
                   labelText: 'Item',
                 ),
                 onSaved: (String value) {},
+                onChanged: (val) {
+                  data["item"] = val;
+                  // print(data);
+                },
               ),
               SizedBox(height: 15),
               SelectFormField(
@@ -73,7 +74,11 @@ class DetailLog extends StatelessWidget {
                           "label": e,
                         })
                     .toList(),
-                onChanged: (val) => print(val),
+                onChanged: (val) {
+                  data["person"] = val;
+                  // print(data);
+                },
+                // onSaved: (val) => print(val),
               ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,
@@ -84,33 +89,69 @@ class DetailLog extends StatelessWidget {
                   hintText: 'How much money is spent?',
                   labelText: "Amount",
                 ),
+                onChanged: (val) {
+                  data["amount"] = val;
+                  // print(data);
+                },
                 onSaved: (String value) {},
+                validator: (val) {
+                  if (double.tryParse(val) == null) {
+                    return "Entere a valid number ";
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 15),
               DateTimePicker(
-                  type: DateTimePickerType.date,
-                  dateMask: 'd MMM, yyyy',
-                  initialValue: DateFormat("dd-MM-yyyy")
-                      .parse(expenses[index]['date'])
-                      .toString(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                  icon: Icon(Icons.event),
-                  dateLabelText: 'Date',
-                  onChanged: (val) => {
-                        print(val),
-                      }),
-              SizedBox(height: 15),
-              TextFormField(
-                autovalidateMode: AutovalidateMode.always,
-                initialValue: expenses[index]['category'],
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.category_outlined),
-                  hintText: 'Category of the spend',
-                  labelText: "Category",
-                ),
-                onSaved: (String value) {},
+                type: DateTimePickerType.date,
+                dateMask: 'd MMM, yyyy',
+                initialValue: DateFormat("dd-MM-yyyy")
+                    .parse(expenses[index]['date'])
+                    .toString(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+                icon: Icon(Icons.event),
+                dateLabelText: 'Date',
+                onChanged: (val) {
+                  data["date"] = val;
+                  // print(data);
+                },
               ),
+              SizedBox(height: 15),
+
+              SelectFormField(
+                type: SelectFormFieldType.dropdown, // or can be dialog
+                initialValue: expenses[index]['category'],
+                icon: Icon(Icons.person_outline),
+                hintText: 'Category of the spend',
+                labelText: 'Category',
+                items: categories
+                    .map((e) => {
+                          "value": e,
+                          "label": e,
+                        })
+                    .toList(),
+                onChanged: (val) {
+                  data["category"] = val;
+                  // print(data);
+                },
+                // onSaved: (val) => print(val),
+              ),
+
+              // TextFormField(
+              //   autovalidateMode: AutovalidateMode.always,
+              //   initialValue: expenses[index]['category'],
+              //   decoration: const InputDecoration(
+              //     icon: Icon(Icons.category_outlined),
+              //     hintText: 'Category of the spend',
+              //     labelText: "Category",
+              //   ),
+              //   onSaved: (String value) {},
+              //   onChanged: (val) {
+              //     data["category"] = val;
+              //     // print(data);
+              //   },
+              // ),
               SizedBox(height: 15),
               Row(
                 children: [
@@ -147,6 +188,11 @@ class DetailLog extends StatelessWidget {
                           : [expenses[index]['shareBy']],
                       cancelButtonLabel: 'CANCEL',
                       hintWidget: Text('Among whom the money is shared?'),
+                      onSaved: (val) {
+                        // print(val);
+                        data["shareBy"] = val.toString();
+                        // print(data);
+                      },
                     ),
                   ),
                 ],

@@ -37,6 +37,9 @@ dependencies:
   intl: ^0.17.0
   select_form_field: "^2.0.0"
   multiselect_formfield: ^0.1.6
+  scoped_model:
+
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
