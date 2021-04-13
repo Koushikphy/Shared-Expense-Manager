@@ -1,5 +1,5 @@
 // import 'package:budget_tracker_ui/pages/budget_page.dart';
-import 'package:budget_tracker_ui/pages/create_budge_page.dart';
+import 'package:budget_tracker_ui/pages/newentry_page.dart';
 import 'package:budget_tracker_ui/pages/daily_page.dart';
 import 'package:budget_tracker_ui/pages/profile_page.dart';
 import 'package:budget_tracker_ui/pages/stats_page.dart';
@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 // import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:budget_tracker_ui/scoped_model/expenseScope.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -30,15 +32,17 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: IndexedStack(
-          index: pageIndex,
-          children: [
-            DailyPage(),
-            StatsPage(),
-            // BudgetPage(),
-            ProfilePage(),
-            CreatBudgetPage()
-          ],
+        body: ScopedModelDescendant<ExpenseModel>(
+          builder: (context, child, model) => IndexedStack(
+            index: pageIndex,
+            children: <Widget>[
+              DailyPage(model: model),
+              StatsPage(model: model),
+              // BudgetPage(),
+              ProfilePage(),
+              NewEntryLog(model: model)
+            ],
+          ),
         ),
         bottomNavigationBar: AnimatedBottomNavigationBar(
           activeColor: primary,

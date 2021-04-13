@@ -1,52 +1,54 @@
 // import 'package:budget_tracker_ui/json/create_budget_json.dart';
-// import 'package:budget_tracker_ui/json/daily_json.dart';
 import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_icons/flutter_icons.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
+// import 'package:search_choices/search_choices.dart';
 import 'package:select_form_field/select_form_field.dart';
+// import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
+// import 'package:budget_tracker_ui/json/daily_json.dart';
 import 'package:budget_tracker_ui/scoped_model/expenseScope.dart';
 
-class DetailLog extends StatelessWidget {
-  final int index;
+class NewEntryLog extends StatelessWidget {
   final ExpenseModel model;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  DetailLog({Key key, @required this.index, @required this.model})
-      : super(key: key);
+  NewEntryLog({Key key, @required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    List categories = model.getCategories;
-    List users = model.getUsers;
-    Map<String, String> data = {...model.getExpenses[index]};
-    print(data);
+
+    var data = {
+      "date": DateTime.now().toString(),
+      "person": "",
+      "item": "",
+      "category": "",
+      "amount": "",
+      "shareBy": ""
+    };
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
         actions: [
           IconButton(
             onPressed: () {
-              // print(data);
-              if (formKey.currentState.validate()) {
-                model.editExpense(index, data);
-                Navigator.pop(context);
-              }
+              if (formKey.currentState.validate()) model.addExpense(data);
+              print(data);
             },
             icon: Icon(Icons.save),
             color: Colors.white,
-            tooltip: "Save",
+            tooltip: "Save ",
           ),
           SizedBox(
             width: 10,
           ),
           IconButton(
             onPressed: () {
-              model.deleteExpense(index);
-              Navigator.pop(context);
+              formKey.currentState.reset();
             },
             icon: Icon(Icons.delete),
             color: Colors.white,
@@ -63,10 +65,10 @@ class DetailLog extends StatelessWidget {
           child: Form(
             key: formKey,
             child: Column(
-              children: <Widget>[
+              children: [
                 TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  initialValue: expenses[index]["item"],
+                  initialValue: data["item"],
                   decoration: const InputDecoration(
                     icon: Icon(Icons.shopping_cart_outlined),
                     hintText: 'Where did you spent the money?',
@@ -75,7 +77,6 @@ class DetailLog extends StatelessWidget {
                   onSaved: (String value) {},
                   onChanged: (val) {
                     data["item"] = val;
-                    // print(data);
                   },
                   validator: (value) =>
                       value.isEmpty ? "Required filed *" : null,
@@ -86,7 +87,7 @@ class DetailLog extends StatelessWidget {
                   initialValue: data['person'],
                   icon: Icon(Icons.person_outline),
                   labelText: 'Spent By',
-                  items: users
+                  items: model.getUsers
                       .map((e) => {
                             "value": e,
                             "label": e,
@@ -94,13 +95,14 @@ class DetailLog extends StatelessWidget {
                       .toList(),
                   onChanged: (val) {
                     data["person"] = val;
+                    // print(data);
                   },
                   validator: (value) =>
                       value.isEmpty ? "Required filed *" : null,
                   // onSaved: (val) => print(val),
                 ),
                 TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   initialValue: data['amount'],
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
@@ -114,31 +116,29 @@ class DetailLog extends StatelessWidget {
                   },
                   onSaved: (String value) {},
                   validator: (val) {
-                    if (val.isEmpty) return "Required field *";
+                    if (val.isEmpty) return "Required filed *";
                     if (double.tryParse(val) == null) {
-                      return "Enter a valid number ";
+                      return "Entre a valid number ";
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 15),
                 DateTimePicker(
-                  type: DateTimePickerType.date,
-                  dateMask: 'd MMM, yyyy',
-                  initialValue:
-                      DateFormat("dd-MM-yyyy").parse(data['date']).toString(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                  icon: Icon(Icons.event),
-                  dateLabelText: 'Date',
-                  onChanged: (val) {
-                    data["date"] = DateFormat('dd-MM-yyyy')
-                        .format(DateFormat('yyyy-MM-dd').parse(val));
-                    // print(val);
-                  },
-                  validator: (value) =>
-                      value.isEmpty ? "Required filed *" : null,
-                ),
+                    type: DateTimePickerType.date,
+                    dateMask: 'd MMM, yyyy',
+                    initialValue: data['date'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: Icon(Icons.event),
+                    dateLabelText: 'Date',
+                    onChanged: (val) {
+                      data["date"] = DateFormat('dd-MM-yyyy')
+                          .format(DateFormat('yyyy-MM-dd').parse(val));
+                      // print(data);
+                    },
+                    validator: (value) =>
+                        value.isEmpty ? "Required field *" : null),
                 SizedBox(height: 15),
                 SelectFormField(
                   type: SelectFormFieldType.dropdown, // or can be dialog
@@ -146,7 +146,7 @@ class DetailLog extends StatelessWidget {
                   icon: Icon(Icons.person_outline),
                   hintText: 'Category of the spend',
                   labelText: 'Category',
-                  items: categories
+                  items: model.getCategories
                       .map((e) => {
                             "value": e,
                             "label": e,
@@ -154,11 +154,10 @@ class DetailLog extends StatelessWidget {
                       .toList(),
                   onChanged: (val) {
                     data["category"] = val;
+                    // print(data);
                   },
                   validator: (value) =>
-                      value.isEmpty ? "Required filed *" : null,
-
-                  // onSaved: (val) => print(val),
+                      value.isEmpty ? "Required field *" : null,
                 ),
                 SizedBox(height: 15),
                 Row(
@@ -183,7 +182,7 @@ class DetailLog extends StatelessWidget {
                           "Shared Between",
                           style: TextStyle(fontSize: 13),
                         ),
-                        dataSource: users
+                        dataSource: model.getUsers
                             .map((e) => {
                                   "value": e,
                                   "display": e,
@@ -192,14 +191,10 @@ class DetailLog extends StatelessWidget {
                         textField: 'display',
                         valueField: 'value',
                         okButtonLabel: 'OK',
-                        initialValue: data['shareBy'] == "All"
-                            ? users
-                            : data['shareBy'].split(','),
                         cancelButtonLabel: 'CANCEL',
                         hintWidget: Text('Among whom the money is shared?'),
                         onSaved: (val) {
-                          data["shareBy"] = val.toString();
-                          // print(data);
+                          data["shareBy"] = val.join(',');
                         },
                         validator: (value) =>
                             (value ?? "").isEmpty ? "Required field *" : null,

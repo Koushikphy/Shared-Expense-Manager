@@ -1,13 +1,17 @@
 // import 'package:budget_tracker_ui/json/day_month.dart';
-import 'package:budget_tracker_ui/json/daily_json.dart';
+// import 'package:budget_tracker_ui/json/daily_json.dart';
 import 'package:budget_tracker_ui/theme/colors.dart';
 // import 'package:budget_tracker_ui/widget/chart.dart';
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 // import 'package:fl_chart/fl_chart.dart';
+import 'package:budget_tracker_ui/scoped_model/expenseScope.dart';
 
 class StatsPage extends StatefulWidget {
+  final ExpenseModel model;
+  StatsPage({Key key, @required this.model}) : super(key: key);
+
   @override
   _StatsPageState createState() => _StatsPageState();
 }
@@ -69,8 +73,7 @@ class _StatsPageState extends State<StatsPage> {
 
   Padding makeStatCrad(String cardType, MaterialColor color, IconData icon) {
     var size = MediaQuery.of(context).size;
-    print(color.runtimeType);
-    print(icon.runtimeType);
+    List users = widget.model.getUsers;
     return Padding(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -142,7 +145,8 @@ class _StatsPageState extends State<StatsPage> {
                             Container(
                               width: (size.width - 40) * .35,
                               child: Text(
-                                expenseStats[cardType][index].toString(),
+                                widget.model.getexpenseStats[cardType][index]
+                                    .toString(),
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: black,

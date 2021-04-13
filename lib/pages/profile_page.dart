@@ -1,7 +1,7 @@
 import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+// import 'package:flutter_icons/flutter_icons.dart';
+// import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -9,10 +9,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController _email =
-      TextEditingController(text: "abbie_wilson@gmail.com");
-  TextEditingController dateOfBirth = TextEditingController(text: "04-19-1992");
-  TextEditingController password = TextEditingController(text: "123456");
+  // TextEditingController _email =TextEditingController(text: "abbie_wilson@gmail.com");
+  // TextEditingController dateOfBirth = TextEditingController(text: "04-19-1992");
+  // TextEditingController password = TextEditingController(text: "123456");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,11 +24,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget getBody() {
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     return SingleChildScrollView(
         child: Center(
             child: Text(
-      "Work in progress",
+      "Coming Soon",
       style: TextStyle(fontSize: 21),
     )));
   }
