@@ -28,7 +28,7 @@ class NewEntryLog extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
-        actions: [
+        actions: <Widget>[
           IconButton(
             onPressed: () {
               if (formKey.currentState.validate()) model.addExpense(data);
@@ -60,7 +60,7 @@ class NewEntryLog extends StatelessWidget {
           child: Form(
             key: formKey,
             child: Column(
-              children: [
+              children: <Widget>[
                 TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   initialValue: data["item"],
@@ -128,8 +128,9 @@ class NewEntryLog extends StatelessWidget {
                     icon: Icon(Icons.event),
                     dateLabelText: 'Date',
                     onChanged: (val) {
-                      data["date"] = DateFormat('dd-MM-yyyy')
-                          .format(DateFormat('yyyy-MM-dd').parse(val));
+                      data["date"] = DateFormat('dd-MM-yyyy').format(
+                        DateFormat('yyyy-MM-dd').parse(val),
+                      );
                       // print(data);
                     },
                     validator: (value) =>
@@ -156,7 +157,7 @@ class NewEntryLog extends StatelessWidget {
                 ),
                 SizedBox(height: 15),
                 Row(
-                  children: [
+                  children: <Widget>[
                     Icon(
                       Icons.people_outline,
                       color: Colors.black.withOpacity(.6),
@@ -171,8 +172,10 @@ class NewEntryLog extends StatelessWidget {
                         checkBoxActiveColor: Colors.blue,
                         checkBoxCheckColor: Colors.white,
                         dialogShapeBorder: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
                         title: Text(
                           "Shared Between",
                           style: TextStyle(fontSize: 13),

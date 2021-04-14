@@ -21,4 +21,10 @@
 11. - [ ] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [ ] Add custom icon for production app.
 13. - [ ] First sharable production build.
-14. - [ ] (not now) Firebase authentication to sync between multiple devices.
+14. - [ ] Introduce search functionality to the log page.
+15. - [ ] (not now) Firebase authentication to sync between multiple devices.
+
+
+## Small todo:
+1. - [ ] Extract the form method from the pages and make it one.
+2. - [ ] Gradient color app bar.

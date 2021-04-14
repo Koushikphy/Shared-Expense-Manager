@@ -24,7 +24,7 @@ class DetailLog extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
-        actions: [
+        actions: <Widget>[
           IconButton(
             onPressed: () {
               // print(data);
@@ -129,8 +129,9 @@ class DetailLog extends StatelessWidget {
                   icon: Icon(Icons.event),
                   dateLabelText: 'Date',
                   onChanged: (val) {
-                    data["date"] = DateFormat('dd-MM-yyyy')
-                        .format(DateFormat('yyyy-MM-dd').parse(val));
+                    data["date"] = DateFormat('dd-MM-yyyy').format(
+                      DateFormat('yyyy-MM-dd').parse(val),
+                    );
                     // print(val);
                   },
                   validator: (value) =>
@@ -159,7 +160,7 @@ class DetailLog extends StatelessWidget {
                 ),
                 SizedBox(height: 15),
                 Row(
-                  children: [
+                  children: <Widget>[
                     Icon(
                       Icons.people_outline,
                       color: Colors.black.withOpacity(.6),
@@ -174,8 +175,8 @@ class DetailLog extends StatelessWidget {
                         checkBoxActiveColor: Colors.blue,
                         checkBoxCheckColor: Colors.white,
                         dialogShapeBorder: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0))),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
                         title: Text(
                           "Shared Between",
                           style: TextStyle(fontSize: 13),

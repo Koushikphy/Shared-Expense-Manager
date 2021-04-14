@@ -26,7 +26,7 @@ class _StatsPageState extends State<StatsPage> {
   Widget getBody() {
     return SingleChildScrollView(
       child: Column(
-        children: [
+        children: <Widget>[
           Container(
             decoration: BoxDecoration(color: white, boxShadow: [
               BoxShadow(
@@ -92,7 +92,7 @@ class _StatsPageState extends State<StatsPage> {
                 padding: EdgeInsets.only(top: 5, bottom: 10, left: 5, right: 5),
                 child: Container(
                   child: Column(
-                    children: [
+                    children: <Widget>[
                       Row(
                         children: [
                           Icon(icon),
@@ -102,9 +102,10 @@ class _StatsPageState extends State<StatsPage> {
                           Text(
                             cardType,
                             style: TextStyle(
-                                fontSize: 25,
-                                color: color.shade800,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 25,
+                              color: color.shade800,
+                              fontWeight: FontWeight.w500,
+                            ),
                           )
                         ],
                       ),
@@ -124,7 +125,7 @@ class _StatsPageState extends State<StatsPage> {
                   users.length,
                   (index) {
                     return Column(
-                      children: [
+                      children: <Widget>[
                         Row(
                           children: [
                             Container(
@@ -132,9 +133,10 @@ class _StatsPageState extends State<StatsPage> {
                               child: Text(
                                 users[index],
                                 style: TextStyle(
-                                    fontSize: 20,
-                                    color: black,
-                                    fontWeight: FontWeight.w500),
+                                  fontSize: 20,
+                                  color: black,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                             Container(
@@ -143,9 +145,10 @@ class _StatsPageState extends State<StatsPage> {
                                 widget.model.getexpenseStats[cardType][index]
                                     .toString(),
                                 style: TextStyle(
-                                    fontSize: 20,
-                                    color: black,
-                                    fontWeight: FontWeight.w500),
+                                  fontSize: 20,
+                                  color: black,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             )
                           ],

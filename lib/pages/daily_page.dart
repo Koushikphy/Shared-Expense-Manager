@@ -67,8 +67,9 @@ class _DailyPageState extends State<DailyPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                DetailLog(index: i, model: widget.model)),
+                          builder: (context) =>
+                              DetailLog(index: i, model: widget.model),
+                        ),
                       );
                     },
                     child: Column(
@@ -82,13 +83,16 @@ class _DailyPageState extends State<DailyPage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(expenses[i]['item'],
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: black,
-                                          fontWeight: FontWeight.w500),
-                                      overflow: TextOverflow.ellipsis),
+                                children: <Widget>[
+                                  Text(
+                                    expenses[i]['item'],
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      color: black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   Row(
                                     children: <Widget>[
                                       Text(
@@ -113,21 +117,23 @@ class _DailyPageState extends State<DailyPage> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
+                                  children: <Widget>[
                                     Text(
                                       expenses[i]['amount'],
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 17,
-                                          color: Colors.green),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17,
+                                        color: Colors.green,
+                                      ),
                                     ),
                                     SizedBox(height: 5),
                                     Text(
                                       expenses[i]['date'],
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: black.withOpacity(0.5),
-                                          fontWeight: FontWeight.w400),
+                                        fontSize: 12,
+                                        color: black.withOpacity(0.5),
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                       overflow: TextOverflow.ellipsis,
                                     )
                                   ],
@@ -137,7 +143,10 @@ class _DailyPageState extends State<DailyPage> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 65, top: 8),
+                          padding: const EdgeInsets.only(
+                            left: 65,
+                            top: 8,
+                          ),
                           child: Divider(
                             thickness: 0.8,
                           ),

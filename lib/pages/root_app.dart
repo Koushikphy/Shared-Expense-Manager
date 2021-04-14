@@ -30,51 +30,52 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ScopedModelDescendant<ExpenseModel>(
-          builder: (context, child, model) => IndexedStack(
-            index: pageIndex,
-            children: <Widget>[
-              DailyPage(model: model),
-              StatsPage(model: model),
-              // BudgetPage(),
-              ProfilePage(),
-              NewEntryLog(model: model)
-            ],
-          ),
-        ),
-        bottomNavigationBar: AnimatedBottomNavigationBar(
-          activeColor: primary,
-          splashColor: secondary,
-          inactiveColor: Colors.black.withOpacity(0.5),
-          icons: [
-            Ionicons.md_calendar,
-            Ionicons.md_stats,
-            // Ionicons.md_wallet,
-            Ionicons.md_settings,
+      body: ScopedModelDescendant<ExpenseModel>(
+        builder: (context, child, model) => IndexedStack(
+          index: pageIndex,
+          children: <Widget>[
+            DailyPage(model: model),
+            StatsPage(model: model),
+            // BudgetPage(),
+            ProfilePage(),
+            NewEntryLog(model: model)
           ],
-          activeIndex: pageIndex,
-          // gapLocation: GapLocation.end,
-          notchSmoothness: NotchSmoothness.softEdge,
-          // leftCornerRadius: 10,
-          iconSize: 30,
-          // rightCornerRadius: 10,
-          onTap: (index) {
-            selectedTab(index);
-          },
-          //other params
         ),
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              selectedTab(3);
-            },
-            child: Icon(
-              Icons.add,
-              size: 25,
-            ),
-            backgroundColor: Colors.pink
-            //params
-            ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked);
+      ),
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        activeColor: primary,
+        splashColor: secondary,
+        inactiveColor: Colors.black.withOpacity(0.5),
+        icons: <IconData>[
+          Ionicons.md_calendar,
+          Ionicons.md_stats,
+          // Ionicons.md_wallet,
+          Ionicons.md_settings,
+        ],
+        activeIndex: pageIndex,
+        // gapLocation: GapLocation.end,
+        notchSmoothness: NotchSmoothness.softEdge,
+        // leftCornerRadius: 10,
+        iconSize: 30,
+        // rightCornerRadius: 10,
+        onTap: (index) {
+          selectedTab(index);
+        },
+        //other params
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            selectedTab(3);
+          },
+          child: Icon(
+            Icons.add,
+            size: 25,
+          ),
+          backgroundColor: Colors.pink
+          //params
+          ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    );
   }
 
   selectedTab(index) {
