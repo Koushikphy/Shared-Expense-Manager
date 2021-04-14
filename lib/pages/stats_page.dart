@@ -1,12 +1,7 @@
-// import 'package:budget_tracker_ui/json/day_month.dart';
-// import 'package:budget_tracker_ui/json/daily_json.dart';
-import 'package:budget_tracker_ui/theme/colors.dart';
-// import 'package:budget_tracker_ui/widget/chart.dart';
-// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-// import 'package:fl_chart/fl_chart.dart';
-import 'package:budget_tracker_ui/scoped_model/expenseScope.dart';
+import 'package:shared_expenses/theme/colors.dart';
+import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
 class StatsPage extends StatefulWidget {
   final ExpenseModel model;

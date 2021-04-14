@@ -1,13 +1,10 @@
-// import 'package:budget_tracker_ui/json/create_budget_json.dart';
-// import 'package:budget_tracker_ui/json/daily_json.dart';
-import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_icons/flutter_icons.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
-import 'package:budget_tracker_ui/scoped_model/expenseScope.dart';
+import 'package:shared_expenses/theme/colors.dart';
+import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
 class DetailLog extends StatelessWidget {
   final int index;
@@ -23,7 +20,7 @@ class DetailLog extends StatelessWidget {
     List categories = model.getCategories;
     List users = model.getUsers;
     Map<String, String> data = {...model.getExpenses[index]};
-    print(data);
+    // print(data);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,

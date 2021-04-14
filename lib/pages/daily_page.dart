@@ -1,11 +1,7 @@
-// import 'package:budget_tracker_ui/json/daily_json.dart';
-// import 'package:budget_tracker_ui/json/day_month.dart';
-import 'package:budget_tracker_ui/theme/colors.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_icons/flutter_icons.dart';
-import "package:budget_tracker_ui/pages/detail_page.dart";
-import 'package:budget_tracker_ui/scoped_model/expenseScope.dart';
-// import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_expenses/theme/colors.dart';
+import "package:shared_expenses/pages/detail_page.dart";
+import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
 class DailyPage extends StatefulWidget {
   final ExpenseModel model;

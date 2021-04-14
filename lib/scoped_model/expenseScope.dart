@@ -1,6 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
 
-// import "package:budget_tracker_ui/json/daily_json.dart";
 List categories = ["Bills", "Food", "Misc"];
 
 List users = ["Koushik", "Satyam", "Joy"];
@@ -79,7 +78,6 @@ List expenses = [
 ];
 
 class ExpenseModel extends Model {
-
   List get getExpenses => expenses;
   List get getCategories => categories;
   List get getUsers => users;
