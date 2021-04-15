@@ -15,7 +15,7 @@
 5. - [x] Transition between pages.
 6. - [x] Flutter Form design with validation.
 7. - [x] Flutter state management and update parent/child/sibling UI on data changes .
-8. - [ ] Math logic to calculate shares.
+8. - [x] Math logic to calculate shares.
 9. - [ ] Initial UI state, when no data is present.
 10. - [ ] Save and persist data on app restart.
 11. - [ ] Import/Export data (JSON ?) also as an Excel sheet?

@@ -17,8 +17,8 @@ class DetailLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    List categories = model.getCategories;
-    List users = model.getUsers;
+    List<String> categories = model.getCategories;
+    List<String> users = model.getUsers;
     Map<String, String> data = {...model.getExpenses[index]};
     // print(data);
     return Scaffold(
@@ -63,7 +63,7 @@ class DetailLog extends StatelessWidget {
               children: <Widget>[
                 TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  initialValue: expenses[index]["item"],
+                  initialValue: data["item"],
                   decoration: const InputDecoration(
                     icon: Icon(Icons.shopping_cart_outlined),
                     hintText: 'Where did you spent the money?',

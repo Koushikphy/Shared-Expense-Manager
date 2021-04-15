@@ -25,6 +25,7 @@ class NewEntryLog extends StatelessWidget {
       "amount": "",
       "shareBy": ""
     };
+    print(model.getExpenses);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
@@ -131,7 +132,7 @@ class NewEntryLog extends StatelessWidget {
                       data["date"] = DateFormat('dd-MM-yyyy').format(
                         DateFormat('yyyy-MM-dd').parse(val),
                       );
-                      // print(data);
+                      print(data);
                     },
                     validator: (value) =>
                         value.isEmpty ? "Required field *" : null),

@@ -28,13 +28,22 @@ class _StatsPageState extends State<StatsPage> {
       child: Column(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: white, boxShadow: [
-              BoxShadow(
-                color: grey.withOpacity(0.01),
-                spreadRadius: 10,
-                blurRadius: 3,
-              ),
-            ]),
+            decoration: BoxDecoration(
+              color: white,
+              boxShadow: [
+                BoxShadow(
+                  color: grey.withOpacity(0.01),
+                  spreadRadius: 10,
+                  blurRadius: 3,
+                ),
+              ],
+              gradient: LinearGradient(
+                  colors: myColors[1],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp),
+            ),
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 50, right: 20, left: 20, bottom: 25),
@@ -48,7 +57,7 @@ class _StatsPageState extends State<StatsPage> {
                         style: TextStyle(
                             fontSize: 21,
                             fontWeight: FontWeight.bold,
-                            color: Colors.deepOrange.shade800),
+                            color: Colors.white),
                       ),
                     ],
                   ),
@@ -68,7 +77,10 @@ class _StatsPageState extends State<StatsPage> {
 
   Padding makeStatCrad(String cardType, MaterialColor color, IconData icon) {
     var size = MediaQuery.of(context).size;
-    List users = widget.model.getUsers;
+    List<String> _users = widget.model.getUsers;
+    widget.model.calculateShares();
+
+    Map<String, double> thisStats = widget.model.getexpenseStats[cardType];
     return Padding(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -122,7 +134,7 @@ class _StatsPageState extends State<StatsPage> {
                 padding: EdgeInsets.all(10),
                 child: Column(
                     children: List.generate(
-                  users.length,
+                  _users.length,
                   (index) {
                     return Column(
                       children: <Widget>[
@@ -131,7 +143,7 @@ class _StatsPageState extends State<StatsPage> {
                             Container(
                               width: (size.width - 40) * .6,
                               child: Text(
-                                users[index],
+                                _users[index],
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: black,
@@ -142,8 +154,7 @@ class _StatsPageState extends State<StatsPage> {
                             Container(
                               width: (size.width - 40) * .35,
                               child: Text(
-                                widget.model.getexpenseStats[cardType][index]
-                                    .toString(),
+                                thisStats[_users[index]].toStringAsFixed(2),
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: black,
@@ -156,7 +167,7 @@ class _StatsPageState extends State<StatsPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Divider(
-                            thickness: index == users.length - 1 ? 0.01 : 0.9,
+                            thickness: index == _users.length - 1 ? 0.01 : 0.9,
                             indent: 5,
                             endIndent: 5,
                           ),

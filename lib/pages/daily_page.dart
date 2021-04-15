@@ -23,19 +23,28 @@ class _DailyPageState extends State<DailyPage> {
 
   Widget getBody() {
     var size = MediaQuery.of(context).size;
-    List expenses = widget.model.getExpenses;
+    List<Map<String, String>> _expenses = widget.model.getExpenses;
     // print(widget.model.expense);
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: white, boxShadow: [
-              BoxShadow(
-                color: grey.withOpacity(0.01),
-                spreadRadius: 10,
-                blurRadius: 3,
-              ),
-            ]),
+            decoration: BoxDecoration(
+              color: white,
+              boxShadow: [
+                BoxShadow(
+                  color: grey.withOpacity(0.01),
+                  spreadRadius: 10,
+                  blurRadius: 3,
+                ),
+              ],
+              gradient: LinearGradient(
+                  colors: myColors[0],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  stops: [0.0, 2.0],
+                  tileMode: TileMode.clamp),
+            ),
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 50, right: 20, left: 20, bottom: 25),
@@ -47,7 +56,7 @@ class _DailyPageState extends State<DailyPage> {
                     style: TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepOrange.shade800),
+                        color: Colors.white),
                   ),
                 ],
               ),
@@ -60,7 +69,7 @@ class _DailyPageState extends State<DailyPage> {
             padding: const EdgeInsets.only(left: 15, right: 0),
             child: Column(
               children: List.generate(
-                widget.model.getExpenses.length,
+                _expenses.length,
                 (i) {
                   return InkWell(
                     onTap: () {
@@ -85,7 +94,7 @@ class _DailyPageState extends State<DailyPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    expenses[i]['item'],
+                                    _expenses[i]['item'],
                                     style: TextStyle(
                                       fontSize: 17,
                                       color: black,
@@ -96,7 +105,7 @@ class _DailyPageState extends State<DailyPage> {
                                   Row(
                                     children: <Widget>[
                                       Text(
-                                        expenses[i]['person'],
+                                        _expenses[i]['person'],
                                         style: TextStyle(
                                           fontWeight: FontWeight.w300,
                                           fontSize: 15,
@@ -119,7 +128,7 @@ class _DailyPageState extends State<DailyPage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
-                                      expenses[i]['amount'],
+                                      _expenses[i]['amount'],
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 17,
@@ -128,7 +137,7 @@ class _DailyPageState extends State<DailyPage> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      expenses[i]['date'],
+                                      _expenses[i]['date'],
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: black.withOpacity(0.5),

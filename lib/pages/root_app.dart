@@ -43,8 +43,8 @@ class _RootAppState extends State<RootApp> {
         ),
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        activeColor: primary,
-        splashColor: secondary,
+        activeColor: myColors[pageIndex][0],
+        splashColor: myColors[pageIndex][1],
         inactiveColor: Colors.black.withOpacity(0.5),
         icons: <IconData>[
           Ionicons.md_calendar,
@@ -81,6 +81,7 @@ class _RootAppState extends State<RootApp> {
   selectedTab(index) {
     setState(() {
       pageIndex = index;
+
     });
   }
 }
