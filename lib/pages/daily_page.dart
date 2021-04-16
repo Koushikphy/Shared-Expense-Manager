@@ -21,7 +21,6 @@ class _DailyPageState extends State<DailyPage> {
     );
   }
 
-
   Widget getBody() {
     var size = MediaQuery.of(context).size;
     List<Map<String, String>> _expenses = widget.model.getExpenses;
@@ -66,23 +65,23 @@ class _DailyPageState extends State<DailyPage> {
           SizedBox(
             height: 30,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 0),
-            child: widget.model.getExpenses.length == 0
-                ? Column(
-                    children: [
-                      Text(
-                        "No expense entries found",
-                        style: TextStyle(fontSize: 21),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            widget.callback(3);
-                          },
-                          child: Text("Add new entries"))
-                    ],
-                  )
-                : Column(
+          widget.model.getExpenses.length == 0
+              ? Column(
+                  children: [
+                    Text(
+                      "No expense entries found",
+                      style: TextStyle(fontSize: 21),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          widget.callback(3);
+                        },
+                        child: Text("Add new entries"))
+                  ],
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 0),
+                  child: Column(
                     children: List.generate(
                       _expenses.length,
                       (i) {
@@ -186,7 +185,7 @@ class _DailyPageState extends State<DailyPage> {
                       },
                     ),
                   ),
-          ),
+                ),
           SizedBox(
             height: 50,
           )

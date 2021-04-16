@@ -3,8 +3,12 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_expenses/pages/root_app.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
+// void main() => runApp(MyApp());
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   final ExpenseModel myExpenseModel = ExpenseModel();

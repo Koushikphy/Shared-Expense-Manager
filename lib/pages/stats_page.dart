@@ -70,10 +70,10 @@ class _StatsPageState extends State<StatsPage> {
               ? Column(
                   children: [
                     SizedBox(
-                      height: 13,
+                      height: 30,
                     ),
                     Text(
-                      "No expense entries found",
+                      "No users added",
                       style: TextStyle(fontSize: 21),
                     ),
                     TextButton(

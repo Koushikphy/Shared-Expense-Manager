@@ -18,7 +18,7 @@
 7. - [x] Flutter state management and update parent/child/sibling UI on data changes .
 8. - [x] Math logic to calculate shares.
 9. - [x] Initial UI state, when no data is present.
-10. - [ ] Save and persist data on app restart.
+10. - [x] Save and persist data on app restart.
 11. - [ ] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [x] Add custom icon for production app.
 13. - [ ] Mocks for presentation 

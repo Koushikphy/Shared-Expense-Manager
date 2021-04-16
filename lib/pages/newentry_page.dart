@@ -65,26 +65,32 @@ class NewEntryLog extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Form(
-            key: formKey,
-            child: (model.getUsers.length == 0 ||
-                    model.getCategories.length == 0)
-                ? Column(
-                    children: [
-                      Text(
-                        "Add user and categories before adding new entries",
-                        style: TextStyle(fontSize: 21),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            callback(2);
-                          },
-                          child: Text("Go to settings"))
-                    ],
-                  )
-                : Column(
+        child: (model.getUsers.length == 0 || model.getCategories.length == 0)
+            ? Container(
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "No user and categories added",
+                      style: TextStyle(fontSize: 21),
+                      textAlign: TextAlign.center,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          callback(2);
+                        },
+                        child: Text("Go to settings"))
+                  ],
+                ),
+              )
+            : Padding(
+                padding: EdgeInsets.all(20),
+                child: Form(
+                  key: formKey,
+                  child: Column(
                     children: <Widget>[
                       TextFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -248,8 +254,8 @@ class NewEntryLog extends StatelessWidget {
                       )
                     ],
                   ),
-          ),
-        ),
+                ),
+              ),
       ),
     );
   }

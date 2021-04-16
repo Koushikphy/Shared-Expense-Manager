@@ -19,6 +19,7 @@ class DetailLog extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     List<String> categories = model.getCategories;
     List<String> users = model.getUsers;
+    // print(model.getUsers);
     Map<String, String> data = {...model.getExpenses[index]};
     // print(data);
     return Scaffold(

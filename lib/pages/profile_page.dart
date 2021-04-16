@@ -6,8 +6,10 @@ import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:path_provider/path_provider.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
-import 'package:file_picker/file_picker.dart';
+// import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'dart:convert';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   final ExpenseModel model;
@@ -197,13 +199,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     iconSize: 35,
                     tooltip: "Download the data",
                     icon: Icon(FlutterIcons.download_faw5s),
-                    onPressed: () {},
+                    onPressed: (){},
                   ),
                   IconButton(
                     iconSize: 35,
                     tooltip: "Upload the data",
                     icon: Icon(FlutterIcons.upload_faw5s),
-                    onPressed: loadUserData,
+                    onPressed: (){},
                   )
                 ],
               ),
@@ -356,14 +358,23 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void saveUserData() {}
+  // _saveUserData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('expenses', json.encode(widget.model.getExpenses));
+  // }
 
-  void loadUserData() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles();
+  // _loadUserData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List tt = json.decode(prefs.getString('expenses'));
+  //   print(tt);
+  // }
 
-    if (result != null) {
-      File file = File(result.files.single.path);
-      print(file);
-    }
-  }
+  // void loadUserData() async {
+  //   FilePickerResult result = await FilePicker.platform.pickFiles();
+
+  //   if (result != null) {
+  //     File file = File(result.files.single.path);
+  //     print(file);
+  //   }
+  // }
 }
