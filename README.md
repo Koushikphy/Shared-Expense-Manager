@@ -10,21 +10,24 @@
     1. - [x] Page to log all expenses and show them in a list view.
     2. - [x] Page to display details of a single entry.
     3. - [x] Dashboard page to display the shares
-    4. - [x] Add new entry page
+    6. - [ ] Chart pages ? 1. Time Series/Pie category/user?
     5. - [x] Profile/Setting page to edit users list, categories, import/export settings
+    4. - [x] Add new entry page
 5. - [x] Transition between pages.
 6. - [x] Flutter Form design with validation.
 7. - [x] Flutter state management and update parent/child/sibling UI on data changes .
 8. - [x] Math logic to calculate shares.
-9. - [ ] Initial UI state, when no data is present.
+9. - [x] Initial UI state, when no data is present.
 10. - [ ] Save and persist data on app restart.
 11. - [ ] Import/Export data (JSON ?) also as an Excel sheet?
-12. - [ ] Add custom icon for production app.
+12. - [x] Add custom icon for production app.
+13. - [ ] Mocks for presentation 
 13. - [ ] First sharable production build.
 14. - [ ] Introduce search functionality to the log page.
 15. - [ ] (not now) Firebase authentication to sync between multiple devices.
 
 
 ## Small todo:
-1. - [ ] Extract the form method from the pages and make it one.
-2. - [ ] Gradient color app bar.
+1. - [ ] crashes on first user/category entry.
+2. - [x] Wrong app name.
+3. - [x] Link to launch my page

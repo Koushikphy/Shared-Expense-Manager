@@ -3,6 +3,11 @@ import 'package:shared_expenses/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import 'package:url_launcher/url_launcher.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 class ProfilePage extends StatefulWidget {
   final ExpenseModel model;
@@ -15,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController userControler = TextEditingController();
   TextEditingController categoryControler = TextEditingController();
-
+  var _url = 'https://github.com/Koushikphy';
   @override
   Widget build(BuildContext context) {
     userControler.text = widget.model.getUsers.join(',');
@@ -198,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     iconSize: 35,
                     tooltip: "Upload the data",
                     icon: Icon(FlutterIcons.upload_faw5s),
-                    onPressed: () {},
+                    onPressed: loadUserData,
                   )
                 ],
               ),
@@ -221,8 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   TextSpan(
                     text: 'Koushik Naskar',
                     style: TextStyle(color: Colors.blueAccent.shade700),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => print('click'),
+                    recognizer: TapGestureRecognizer()..onTap = _launchURL,
                   ),
                 ],
               ),
@@ -235,6 +239,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
+
+  void _launchURL() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
 
   void showUserDialog() {
     showDialog<void>(
@@ -346,5 +354,16 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
+  }
+
+  void saveUserData() {}
+
+  void loadUserData() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      File file = File(result.files.single.path);
+      print(file);
+    }
   }
 }
