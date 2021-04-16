@@ -5,16 +5,15 @@ import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
 class StatsPage extends StatefulWidget {
   final ExpenseModel model;
-  StatsPage({Key key, @required this.model}) : super(key: key);
+  final Function callback;
+
+  StatsPage({Key key, @required this.model, this.callback}) : super(key: key);
 
   @override
   _StatsPageState createState() => _StatsPageState();
 }
 
 class _StatsPageState extends State<StatsPage> {
-  int activeDay = 3;
-
-  bool showAvg = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,9 +54,10 @@ class _StatsPageState extends State<StatsPage> {
                       Text(
                         "Stats",
                         style: TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -65,11 +65,34 @@ class _StatsPageState extends State<StatsPage> {
               ),
             ),
           ),
-          makeStatCrad(
-              "Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
-          makeStatCrad(
-              "Total Owe", Colors.green, MaterialIcons.account_balance),
-          makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
+          (widget.model.getUsers.length == 0 ||
+                  widget.model.getCategories.length == 0)
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 13,
+                    ),
+                    Text(
+                      "No expense entries found",
+                      style: TextStyle(fontSize: 21),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          widget.callback(2);
+                        },
+                        child: Text("Go to settings"))
+                  ],
+                )
+              : Column(
+                  children: [
+                    makeStatCrad("Total Spends", Colors.pink,
+                        MaterialCommunityIcons.shopping),
+                    makeStatCrad("Total Owe", Colors.green,
+                        MaterialIcons.account_balance),
+                    makeStatCrad(
+                        "Net Owe", Colors.purple, MaterialIcons.payment),
+                  ],
+                )
         ],
       ),
     );

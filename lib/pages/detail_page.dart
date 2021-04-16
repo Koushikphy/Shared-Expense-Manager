@@ -141,7 +141,7 @@ class DetailLog extends StatelessWidget {
                 SelectFormField(
                   type: SelectFormFieldType.dropdown, // or can be dialog
                   initialValue: data['category'],
-                  icon: Icon(Icons.person_outline),
+                  icon: Icon(Icons.category),
                   hintText: 'Category of the spend',
                   labelText: 'Category',
                   items: categories

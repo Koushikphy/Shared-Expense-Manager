@@ -34,11 +34,11 @@ class _RootAppState extends State<RootApp> {
         builder: (context, child, model) => IndexedStack(
           index: pageIndex,
           children: <Widget>[
-            DailyPage(model: model),
-            StatsPage(model: model),
+            DailyPage(model: model, callback: callback),
+            StatsPage(model: model, callback: callback),
             // BudgetPage(),
-            ProfilePage(),
-            NewEntryLog(model: model)
+            ProfilePage(model: model),
+            NewEntryLog(model: model, callback: callback)
           ],
         ),
       ),
@@ -81,7 +81,13 @@ class _RootAppState extends State<RootApp> {
   selectedTab(index) {
     setState(() {
       pageIndex = index;
+    });
+  }
 
+  callback(int index) {
+    setState(() {
+      index ??= 2;
+      pageIndex = index;
     });
   }
 }

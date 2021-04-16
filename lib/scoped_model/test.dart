@@ -93,14 +93,7 @@ class ExpenseModel extends Model {
     notifyListeners();
   }
 
-  void resetAll() {
-    categories = [];
-    users = [];
-    expenses = [];
-    notifyListeners();
-  }
-
-  void addExpense(Map<String, String> newExpenseEntry) {
+  void addExpense(Map<String, dynamic> newExpenseEntry) {
     expenses.insert(0, newExpenseEntry);
     notifyListeners();
   }
