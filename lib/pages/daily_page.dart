@@ -47,12 +47,12 @@ class _DailyPageState extends State<DailyPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 50, right: 20, left: 20, bottom: 25),
+                  top: 50, right: 20, left: 20, bottom: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "Daily Expense Log",
+                    "Expense Log",
                     style: TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.bold,

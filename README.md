@@ -19,7 +19,7 @@
 8. - [x] Math logic to calculate shares.
 9. - [x] Initial UI state, when no data is present.
 10. - [x] Save and persist data on app restart.
-11. - [ ] Import/Export data (JSON ?) also as an Excel sheet?
+11. - [x] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [x] Add custom icon for production app.
 13. - [ ] Mocks for presentation 
 13. - [ ] First sharable production build.
@@ -29,5 +29,10 @@
 
 ## Small todo:
 1. - [ ] crashes on first user/category entry.
-2. - [x] Wrong app name.
-3. - [x] Link to launch my page
+2. - [x] Remove trailing comma
+3. - [x] Remove daily from the top bar
+4. - [x] may be equal app bar height.
+5. - [x] Cannot modify existing user and categories.
+
+
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

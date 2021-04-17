@@ -6,8 +6,12 @@ import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:path_provider/path_provider.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
-// import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'package:intl/intl.dart';
 import 'dart:convert';
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +26,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController userControler = TextEditingController();
   TextEditingController categoryControler = TextEditingController();
-  var _url = 'https://github.com/Koushikphy';
   @override
   Widget build(BuildContext context) {
     userControler.text = widget.model.getUsers.join(',');
@@ -87,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             children: [
               Image.asset(
-                "assets/images/budgeting.png",
+                "assets/images/budget.png",
                 height: 100,
                 fit: BoxFit.contain,
               ),
@@ -199,13 +202,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     iconSize: 35,
                     tooltip: "Download the data",
                     icon: Icon(FlutterIcons.download_faw5s),
-                    onPressed: (){},
+                    onPressed: showChangeDialog,
                   ),
                   IconButton(
                     iconSize: 35,
                     tooltip: "Upload the data",
                     icon: Icon(FlutterIcons.upload_faw5s),
-                    onPressed: (){},
+                    onPressed: saveUserData,
                   )
                 ],
               ),
@@ -242,9 +245,20 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _launchURL() async => await canLaunch(_url)
-      ? await launch(_url)
-      : throw 'Could not launch $_url';
+  var _url = 'https://github.com/Koushikphy';
+  void _launchURL() async {
+    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
+  }
+
+  bool notContains(List<String> source, List<String> dest) {
+    // check if any element of dest exists in dest
+    for (String elem in dest) {
+      if (!source.contains(elem)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   void showUserDialog() {
     showDialog<void>(
@@ -267,9 +281,21 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               child: Text('OK'),
               onPressed: () {
-                widget.model.setUsers(userControler.text.toString().split(','));
                 Navigator.of(context).pop();
-                print(widget.model.getUsers);
+                List<String> uList = userControler.text
+                    .toString()
+                    .split(',')
+                    .map((e) => e.trim())
+                    .toList();
+
+                if (widget.model.getUsers.length != 0 &&
+                    notContains(widget.model.getUsers, uList)) {
+                  showWarningDialog("users");
+                } else {
+                  widget.model.setUsers(uList);
+                }
+
+                // print(widget.model.getUsers);
               },
             ),
             TextButton(
@@ -305,10 +331,19 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               child: Text('OK'),
               onPressed: () {
-                widget.model.setCategories(
-                    categoryControler.text.toString().split(','));
                 Navigator.of(context).pop();
-                print(widget.model.getUsers);
+                List<String> cList = categoryControler.text
+                    .toString()
+                    .split(',')
+                    .map((e) => e.trim())
+                    .toList();
+
+                if (widget.model.getCategories.length != 0 &&
+                    notContains(widget.model.getCategories, cList)) {
+                  showWarningDialog("users");
+                } else {
+                  widget.model.setCategories(cList);
+                }
               },
             ),
             TextButton(
@@ -342,7 +377,6 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text('OK'),
               onPressed: () {
                 widget.model.resetAll();
-
                 Navigator.of(context).pop();
               },
             ),
@@ -358,23 +392,111 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // _saveUserData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('expenses', json.encode(widget.model.getExpenses));
-  // }
+  void showChangeDialog() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('This will clear all exiting records.\n Want to proceed?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                loadUserData();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Cancle'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-  // _loadUserData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   List tt = json.decode(prefs.getString('expenses'));
-  //   print(tt);
-  // }
+  void showWarningDialog(String param) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert !'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Can not modify existing $param'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                widget.model.resetAll();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-  // void loadUserData() async {
-  //   FilePickerResult result = await FilePicker.platform.pickFiles();
+  void loadUserData() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    if (result == null) {
+      return;
+    }
 
-  //   if (result != null) {
-  //     File file = File(result.files.single.path);
-  //     print(file);
-  //   }
-  // }
+    // String timeStamp = DateFormat('dd_MM_yyyy').format(DateTime.now());
+    // final directory = await getExternalStorageDirectory();
+    // String fileName = "${directory.path}/Expenses_$timeStamp.txt";
+
+    String fileName = result.files.single.path;
+    var data = json.decode(File(fileName).readAsStringSync());
+    // print(data);
+    List<String> _uList =
+        (data["users"] as List).map((e) => e as String).toList();
+
+    List<String> _cList =
+        (data["categories"] as List).map((e) => e as String).toList();
+
+    List<Map<String, String>> _exList = (data["expenses"] as List)
+        .map((e) => Map<String, String>.from(e))
+        .toList();
+
+    widget.model.newDataLoaded(_uList, _cList, _exList);
+  }
+
+  void saveUserData() async {
+    // await Permission.storage.request();
+    // var status = await Permission.storage.request();
+
+    String timeStamp = DateFormat('dd_MM_yyyy').format(DateTime.now());
+
+    // String path = await FilePicker.platform.getDirectoryPath();
+    final directory = await getExternalStorageDirectory();
+    String fileName = "${directory.path}/Expenses_$timeStamp.txt";
+
+    File(fileName).writeAsString(json.encode({
+      "users": widget.model.getUsers,
+      "categories": widget.model.getCategories,
+      "expenses": widget.model.getExpenses
+    }));
+
+    final snackBar = SnackBar(content: Text('File Saved'));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }

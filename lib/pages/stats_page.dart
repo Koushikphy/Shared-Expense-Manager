@@ -45,7 +45,7 @@ class _StatsPageState extends State<StatsPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 50, right: 20, left: 20, bottom: 25),
+                  top: 50, right: 20, left: 20, bottom: 15),
               child: Column(
                 children: [
                   Row(

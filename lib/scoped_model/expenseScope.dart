@@ -9,7 +9,7 @@ class ExpenseModel extends Model {
 
   List<String> categories = []; // ["Bills", "Food", "Misc"];
 
-  List<String> users = [];//["Koushik", "Satyam", "Joy"];
+  List<String> users = []; //["Koushik", "Satyam", "Joy"];
 
   Map<String, Map<String, double>> expenseStats = {
     // "Total Spends": {"Koushik": 0, "Satyam": 0, "Joy": 0},
@@ -92,11 +92,13 @@ class ExpenseModel extends Model {
 
   void setUsers(List<String> userList) {
     users = userList;
+    upDateUserData(true, false, false);
     notifyListeners();
   }
 
   void setCategories(List<String> categoryList) {
     categories = categoryList;
+    upDateUserData(false, true, false);
     notifyListeners();
   }
 
@@ -109,28 +111,24 @@ class ExpenseModel extends Model {
 
   void addExpense(Map<String, String> newExpenseEntry) {
     expenses.insert(0, newExpenseEntry);
-    upDateUserData();
+    upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void deleteExpense(int index) {
     expenses.removeAt(index);
-    upDateUserData();
+    upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void editExpense(int index, Map<String, dynamic> updatedExpenseEntry) {
     expenses[index] = updatedExpenseEntry;
-    upDateUserData();
+    upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void setInitValues() {
     SharedPreferences.getInstance().then((prefs) {
-      // prefs.setString('expenses', json.encode(expenses));
-      // prefs.setStringList('users', users);
-      // prefs.setStringList('categories', categories);
-      // print(prefs);
       users = prefs.getStringList('users') ?? [];
       categories = prefs.getStringList('categories') ?? [];
       print(users);
@@ -146,12 +144,21 @@ class ExpenseModel extends Model {
     });
   }
 
-  void upDateUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('expenses', json.encode(expenses));
-    await prefs.setStringList('users', users);
-    await prefs.setStringList('categories', categories);
-    print("yp");
+  void upDateUserData(bool u, bool c, bool e) async {
+    SharedPreferences.getInstance().then((prefs) => {
+          e ? prefs.setString('expenses', json.encode(expenses)) : null,
+          u ? prefs.setStringList('users', users) : null,
+          c ? prefs.setStringList('categories', categories) : null
+        });
+  }
+
+  void newDataLoaded(List<String> _uList, List<String> _cList,
+      List<Map<String, String>> _exList) {
+    users = _uList;
+    categories = _cList;
+    expenses = _exList;
+    upDateUserData(true, true, true);
+    notifyListeners();
   }
 
   void calculateShares() {
