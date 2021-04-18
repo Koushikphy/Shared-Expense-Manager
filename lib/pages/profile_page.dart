@@ -487,6 +487,8 @@ class _ProfilePageState extends State<ProfilePage> {
     String timeStamp = DateFormat('dd_MM_yyyy').format(DateTime.now());
 
     // String path = await FilePicker.platform.getDirectoryPath();
+    // weired but I can't get the permission to save the data to an aribtraty storage, 
+    // it returns permission denied, so the file is saved in a given storage only for now.
     final directory = await getExternalStorageDirectory();
     String fileName = "${directory.path}/Expenses_$timeStamp.txt";
 

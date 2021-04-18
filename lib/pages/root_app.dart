@@ -8,6 +8,7 @@ import 'package:shared_expenses/pages/stats_page.dart';
 import 'package:shared_expenses/pages/profile_page.dart';
 import 'package:shared_expenses/pages/newentry_page.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import 'package:swipedetector/swipedetector.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -31,15 +32,27 @@ class _RootAppState extends State<RootApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ScopedModelDescendant<ExpenseModel>(
-        builder: (context, child, model) => IndexedStack(
-          index: pageIndex,
-          children: <Widget>[
-            DailyPage(model: model, callback: callback),
-            StatsPage(model: model, callback: callback),
-            // BudgetPage(),
-            ProfilePage(model: model),
-            NewEntryLog(model: model, callback: callback)
-          ],
+        builder: (context, child, model) => SwipeDetector(
+          child: IndexedStack(
+            index: pageIndex,
+            children: <Widget>[
+              DailyPage(model: model, callback: callback),
+              StatsPage(model: model, callback: callback),
+              // BudgetPage(),
+              ProfilePage(model: model),
+              NewEntryLog(model: model, callback: callback)
+            ],
+          ),
+          onSwipeRight: () {
+            setState(() {
+              if (pageIndex > 0) pageIndex--;
+            });
+          },
+          onSwipeLeft: () {
+            setState(() {
+              if (pageIndex < 3) pageIndex++;
+            });
+          },
         ),
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
