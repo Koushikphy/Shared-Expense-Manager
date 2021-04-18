@@ -2,8 +2,9 @@
 ### An Android and iOS app for managing shared expenses.
 
 
+<details>
+<summary> ### TODOs: </summary>
 
-### TODO:
 1. - [x] Introduction to flutter and dart programming language.
 2. - [x] Setup flutter and a sample starting project.
 3. - [x] Android studio setup with virtual device + real device adb.
@@ -19,15 +20,18 @@
 6. - [x] Flutter Form design with validation.
 7. - [x] Flutter state management and update parent/child/sibling UI on data changes .
 8. - [x] Math logic to calculate shares.
+8. - [ ] Unequal shares of expenses.
 9. - [x] Initial UI state, when no data is present.
 10. - [x] Save and persist data on app restart.
 11. - [x] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [x] Add custom icon for production app.
 13. - [x] App signing for distribution
 13. - [ ] Mocks for presentation 
-13. - [ ] First sharable production build.
+13. - [x] First sharable production build.
 14. - [ ] Introduce search functionality to the log page.
 15. - [ ] (not now) Firebase authentication to sync between multiple devices.
+</details>
+
 
 
 
