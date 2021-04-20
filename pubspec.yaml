@@ -30,7 +30,7 @@ dependencies:
   flutter_icons: ^1.1.0
   page_transition: ^1.1.7+6
   animated_bottom_navigation_bar: ^0.2.1
-  fl_chart: ^0.12.2
+  fl_chart: ^0.35.0
   # percent_indicator: "^2.1.7+2"
   # curved_navigation_bar: ^0.3.7
   date_time_picker: "^2.0.0"

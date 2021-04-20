@@ -9,6 +9,7 @@ import 'package:shared_expenses/pages/profile_page.dart';
 import 'package:shared_expenses/pages/newentry_page.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:swipedetector/swipedetector.dart';
+import 'package:shared_expenses/pages/chart_page.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -39,6 +40,7 @@ class _RootAppState extends State<RootApp> {
               DailyPage(model: model, callback: callback),
               StatsPage(model: model, callback: callback),
               // BudgetPage(),
+              LineChartSample9(),
               ProfilePage(model: model),
               NewEntryLog(model: model, callback: callback)
             ],
@@ -62,7 +64,7 @@ class _RootAppState extends State<RootApp> {
         icons: <IconData>[
           Ionicons.md_calendar,
           Ionicons.md_stats,
-          // Ionicons.md_wallet,
+          Ionicons.md_pie,
           Ionicons.md_settings,
         ],
         activeIndex: pageIndex,
