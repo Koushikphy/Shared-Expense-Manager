@@ -128,20 +128,21 @@ class ExpenseModel extends Model {
   }
 
   void setInitValues() {
-    SharedPreferences.getInstance().then((prefs) {
-      users = prefs.getStringList('users') ?? [];
-      categories = prefs.getStringList('categories') ?? [];
-      print(users);
-      print(categories);
-      if (users.length != 0 && categories.length != 0) {
-        expenses = (json.decode(prefs.getString('expenses')) as Iterable)
-            .map((e) => Map<String, String>.from(e))
-            ?.toList();
-      } else {
-        expenses = [];
-      }
-      notifyListeners();
-    });
+    // SharedPreferences.getInstance().then((prefs) {
+    //   users = prefs.getStringList('users') ?? [];
+    //   categories = prefs.getStringList('categories') ?? [];
+    //   print(users);
+    //   print(categories);
+    //   if (users.length != 0 && categories.length != 0) {
+    //     expenses = (json.decode(prefs.getString('expenses')) as Iterable)
+    //         .map((e) => Map<String, String>.from(e))
+    //         ?.toList();
+    //   } else {
+    //     expenses = [];
+    //   }
+    //   notifyListeners();
+    // });
+    testData();
   }
 
   void upDateUserData(bool u, bool c, bool e) async {
@@ -187,5 +188,84 @@ class ExpenseModel extends Model {
     );
 
     expenseStats = tmpStats;
+  }
+
+  testData() {
+    categories = ["Bills", "Food", "Misc"];
+
+    users = ["Koushik", "Satyam", "Joy"];
+
+    expenseStats = {
+      "Total Spends": {"Koushik": 0, "Satyam": 0, "Joy": 0},
+      "Total Owe": {"Koushik": 0, "Satyam": 0, "Joy": 0},
+      "Net Owe": {"Koushik": 0, "Satyam": 0, "Joy": 0}
+    };
+
+    expenses = [
+      {
+        "date": "01-03-2021",
+        "person": "Satyam",
+        "item": "Groceries",
+        "category": "Food",
+        "amount": "290",
+        "shareBy": "All"
+      },
+      {
+        "date": "01-03-2021",
+        "person": "Joy",
+        "item": "Milk",
+        "category": "Food",
+        "amount": "220",
+        "shareBy": "Koushik"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "Joy",
+        "item": "Misc",
+        "category": "Food",
+        "amount": "200",
+        "shareBy": "Satyam"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "Koushik",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "64",
+        "shareBy": "All"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "Koushik",
+        "item": "Gas",
+        "category": "Food",
+        "amount": "64",
+        "shareBy": "All"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "Koushik",
+        "item": "Water",
+        "category": "Food",
+        "amount": "64",
+        "shareBy": "All"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "Koushik",
+        "item": "Vegetables",
+        "category": "Food",
+        "amount": "64",
+        "shareBy": "All"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "Koushik",
+        "item": "Misc",
+        "category": "Food",
+        "amount": "64",
+        "shareBy": "All"
+      },
+    ];
   }
 }

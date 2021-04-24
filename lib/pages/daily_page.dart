@@ -3,28 +3,24 @@ import 'package:shared_expenses/theme/colors.dart';
 import "package:shared_expenses/pages/detail_page.dart";
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
-class DailyPage extends StatefulWidget {
+class DailyPage extends StatelessWidget {
   final ExpenseModel model;
   final Function callback;
-  DailyPage({Key key, @required this.model, this.callback}) : super(key: key);
+  const DailyPage({Key key, @required this.model, this.callback})
+      : super(key: key);
 
-  @override
-  _DailyPageState createState() => _DailyPageState();
-}
-
-class _DailyPageState extends State<DailyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: grey.withOpacity(0.05),
-      body: getBody(),
+      body: getBody(context),
     );
   }
 
-  Widget getBody() {
+  Widget getBody(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    List<Map<String, String>> _expenses = widget.model.getExpenses;
-    // print(widget.model.expense);
+    List<Map<String, String>> _expenses = model.getExpenses;
+    // print(model.expense);
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -65,7 +61,7 @@ class _DailyPageState extends State<DailyPage> {
           SizedBox(
             height: 30,
           ),
-          widget.model.getExpenses.length == 0
+          model.getExpenses.length == 0
               ? Column(
                   children: [
                     Text(
@@ -74,7 +70,7 @@ class _DailyPageState extends State<DailyPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          widget.callback(3);
+                          callback(3);
                         },
                         child: Text("Add new entries"))
                   ],
@@ -91,7 +87,7 @@ class _DailyPageState extends State<DailyPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    DetailLog(index: i, model: widget.model),
+                                    DetailLog(index: i, model: model),
                               ),
                             );
                           },

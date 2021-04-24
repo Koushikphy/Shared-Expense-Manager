@@ -1,6 +1,11 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ExpenseModel extends Model {
+  ExpenseModel() {
+    setInitValues();
+  }
   List<String> categories = ["Bills", "Food", "Misc"];
 
   List<String> users = ["Koushik", "Satyam", "Joy"];
@@ -78,6 +83,7 @@ class ExpenseModel extends Model {
     },
   ];
 
+  Future<SharedPreferences> mySharedPref = SharedPreferences.getInstance();
   List<Map<String, String>> get getExpenses => expenses;
   List<String> get getCategories => categories;
   List<String> get getUsers => users;
@@ -85,26 +91,72 @@ class ExpenseModel extends Model {
 
   void setUsers(List<String> userList) {
     users = userList;
+    upDateUserData(true, false, false);
     notifyListeners();
   }
 
   void setCategories(List<String> categoryList) {
     categories = categoryList;
+    upDateUserData(false, true, false);
     notifyListeners();
   }
 
-  void addExpense(Map<String, dynamic> newExpenseEntry) {
+  void resetAll() {
+    categories = [];
+    users = [];
+    expenses = [];
+    notifyListeners();
+  }
+
+  void addExpense(Map<String, String> newExpenseEntry) {
     expenses.insert(0, newExpenseEntry);
+    upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void deleteExpense(int index) {
     expenses.removeAt(index);
+    upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void editExpense(int index, Map<String, dynamic> updatedExpenseEntry) {
     expenses[index] = updatedExpenseEntry;
+    upDateUserData(false, false, true);
+    notifyListeners();
+  }
+
+  void setInitValues() {
+    // SharedPreferences.getInstance().then((prefs) {
+    //   users = prefs.getStringList('users') ?? [];
+    //   categories = prefs.getStringList('categories') ?? [];
+    //   print(users);
+    //   print(categories);
+    //   if (users.length != 0 && categories.length != 0) {
+    //     expenses = (json.decode(prefs.getString('expenses')) as Iterable)
+    //         .map((e) => Map<String, String>.from(e))
+    //         ?.toList();
+    //   } else {
+    //     expenses = [];
+    //   }
+    //   notifyListeners();
+    // });
+  }
+
+  void upDateUserData(bool u, bool c, bool e) async {
+    SharedPreferences.getInstance().then((prefs) => {
+          e ? prefs.setString('expenses', json.encode(expenses)) : null,
+          u ? prefs.setStringList('users', users) : null,
+          c ? prefs.setStringList('categories', categories) : null
+        });
+  }
+
+  void newDataLoaded(List<String> _uList, List<String> _cList,
+      List<Map<String, String>> _exList) {
+    users = _uList;
+    categories = _cList;
+    expenses = _exList;
+    upDateUserData(true, true, true);
     notifyListeners();
   }
 
