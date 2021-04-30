@@ -34,6 +34,8 @@ pictures/snapshot
 11. - [x] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [x] Add custom icon for production app.
 13. - [x] App signing for distribution.
+1.  - [ ] Page to add users.
+1.  - [ ] Page to add categories?
 14. - [ ] Sort the data according to time at modification.
 13. - [ ] Mocks for presentation 
 13. - [x] First sharable production build.

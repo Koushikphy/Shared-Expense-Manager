@@ -23,78 +23,84 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   Widget getBody() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: white,
-              boxShadow: [
-                BoxShadow(
-                  color: grey.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: white,
+            boxShadow: [
+              BoxShadow(
+                color: grey.withOpacity(0.01),
+                spreadRadius: 10,
+                blurRadius: 3,
+              ),
+            ],
+            gradient: LinearGradient(
+                colors: myColors[1],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp),
+          ),
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 15),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Stats",
+                      style: TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ],
-              gradient: LinearGradient(
-                  colors: myColors[1],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 50, right: 20, left: 20, bottom: 15),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Stats",
-                        style: TextStyle(
-                          fontSize: 21,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
             ),
           ),
-          (widget.model.getUsers.length == 0 ||
-                  widget.model.getCategories.length == 0)
-              ? Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      "No users added",
-                      style: TextStyle(fontSize: 21),
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          widget.callback(2);
-                        },
-                        child: Text("Go to settings"))
-                  ],
-                )
-              : Column(
-                  children: [
-                    makeStatCrad("Total Spends", Colors.pink,
-                        MaterialCommunityIcons.shopping),
-                    makeStatCrad("Total Owe", Colors.green,
-                        MaterialIcons.account_balance),
-                    makeStatCrad(
-                        "Net Owe", Colors.purple, MaterialIcons.payment),
-                  ],
-                )
-        ],
-      ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                (widget.model.getUsers.length == 0 ||
+                        widget.model.getCategories.length == 0)
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Text(
+                            "No users added",
+                            style: TextStyle(fontSize: 21),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                widget.callback(2);
+                              },
+                              child: Text("Go to settings"))
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          makeStatCrad("Total Spends", Colors.pink,
+                              MaterialCommunityIcons.shopping),
+                          makeStatCrad("Total Owe", Colors.green,
+                              MaterialIcons.account_balance),
+                          makeStatCrad(
+                              "Net Owe", Colors.purple, MaterialIcons.payment),
+                        ],
+                      )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

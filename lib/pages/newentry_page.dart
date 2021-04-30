@@ -4,25 +4,30 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
 
-class NewEntryLog extends StatelessWidget {
+class NewEntryLog extends StatefulWidget {
   final ExpenseModel model;
   final Function callback;
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   NewEntryLog({Key key, @required this.model, this.callback}) : super(key: key);
+
+  @override
+  _NewEntryLogState createState() => _NewEntryLogState();
+}
+
+class _NewEntryLogState extends State<NewEntryLog> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  List<double> aList = [];
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    print(aList.length);
     TextEditingController _itemEditor = TextEditingController();
     TextEditingController _personEditor = TextEditingController();
     TextEditingController _amountEditor = TextEditingController();
-    TextEditingController _dateEditor =
-        TextEditingController(text: DateTime.now().toString());
+    TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
     TextEditingController _categoryEditor = TextEditingController();
     String _shareEditor;
     // print(model.getExpenses);
@@ -34,9 +39,8 @@ class NewEntryLog extends StatelessWidget {
             onPressed: () {
               // formKey.currentState.validate();
               if (formKey.currentState.validate())
-                model.addExpense({
-                  "date": DateFormat('dd-MM-yyyy')
-                      .format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
+                widget.model.addExpense({
+                  "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
                   "person": _personEditor.text,
                   "item": _itemEditor.text,
                   "category": _categoryEditor.text,
@@ -65,7 +69,7 @@ class NewEntryLog extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: (model.getUsers.length == 0 || model.getCategories.length == 0)
+        child: (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
             ? Container(
                 width: double.infinity,
                 child: Column(
@@ -80,7 +84,7 @@ class NewEntryLog extends StatelessWidget {
                     ),
                     TextButton(
                         onPressed: () {
-                          callback(2);
+                          widget.callback(2);
                         },
                         child: Text("Go to settings"))
                   ],
@@ -105,8 +109,7 @@ class NewEntryLog extends StatelessWidget {
                         //   data["item"] = val;
                         // },
                         controller: _itemEditor,
-                        validator: (value) =>
-                            value.isEmpty ? "Required filed *" : null,
+                        validator: (value) => value.isEmpty ? "Required filed *" : null,
                       ),
                       SizedBox(height: 15),
                       SelectFormField(
@@ -115,7 +118,7 @@ class NewEntryLog extends StatelessWidget {
                         icon: Icon(Icons.person_outline),
                         labelText: 'Spent By',
                         controller: _personEditor,
-                        items: model.getUsers
+                        items: widget.model.getUsers
                             .map((e) => {
                                   "value": e,
                                   "label": e,
@@ -125,8 +128,7 @@ class NewEntryLog extends StatelessWidget {
                         //   data["person"] = val;
                         //   // print(data);
                         // },
-                        validator: (value) =>
-                            value.isEmpty ? "Required filed *" : null,
+                        validator: (value) => value.isEmpty ? "Required filed *" : null,
                         // onSaved: (val) => print(val),
                       ),
                       TextFormField(
@@ -176,8 +178,7 @@ class NewEntryLog extends StatelessWidget {
                           //   print(data["date"]);
                           //   print("from submit");
                           // },
-                          validator: (value) =>
-                              value.isEmpty ? "Required field *" : null),
+                          validator: (value) => value.isEmpty ? "Required field *" : null),
                       SizedBox(height: 15),
                       SelectFormField(
                         type: SelectFormFieldType.dropdown, // or can be dialog
@@ -186,7 +187,7 @@ class NewEntryLog extends StatelessWidget {
                         icon: Icon(Icons.category),
                         hintText: 'Category of the spend',
                         labelText: 'Category',
-                        items: model.getCategories
+                        items: widget.model.getCategories
                             .map((e) => {
                                   "value": e,
                                   "label": e,
@@ -199,57 +200,108 @@ class NewEntryLog extends StatelessWidget {
                         // onSaved: (newValue) {
                         //   _shareEditor = newValue;
                         // },
-                        validator: (value) =>
-                            value.isEmpty ? "Required field *" : null,
+                        validator: (value) => value.isEmpty ? "Required field *" : null,
                       ),
                       SizedBox(height: 15),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.people_outline,
-                            color: Colors.black.withOpacity(.6),
-                          ),
-                          Container(
-                            width: size.width * .82,
-                            child: MultiSelectFormField(
-                              // lea
-                              autovalidate: false,
-                              chipBackGroundColor: Colors.deepPurple.shade200,
-                              chipLabelStyle:
-                                  TextStyle(fontWeight: FontWeight.bold),
-                              dialogTextStyle:
-                                  TextStyle(fontWeight: FontWeight.bold),
-                              checkBoxActiveColor: Colors.blue,
-                              checkBoxCheckColor: Colors.white,
-                              dialogShapeBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(5.0),
+                      // Row(
+                      //   children: <Widget>[
+                      //     Icon(
+                      //       Icons.people_outline,
+                      //       color: Colors.black.withOpacity(.6),
+                      //     ),
+                      //     Container(
+                      //       width: size.width * .82,
+                      //       child: MultiSelectFormField(
+                      //         // lea
+                      //         autovalidate: false,
+                      //         chipBackGroundColor: Colors.deepPurple.shade200,
+                      //         chipLabelStyle:
+                      //             TextStyle(fontWeight: FontWeight.bold),
+                      //         dialogTextStyle:
+                      //             TextStyle(fontWeight: FontWeight.bold),
+                      //         checkBoxActiveColor: Colors.blue,
+                      //         checkBoxCheckColor: Colors.white,
+                      //         dialogShapeBorder: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.all(
+                      //             Radius.circular(5.0),
+                      //           ),
+                      //         ),
+                      //         title: Text(
+                      //           "Shared Between",
+                      //           style: TextStyle(fontSize: 13),
+                      //         ),
+                      //         dataSource: widget.model.getUsers
+                      //             .map((e) => {
+                      //                   "value": e,
+                      //                   "display": e,
+                      //                 })
+                      //             .toList(),
+                      //         textField: 'display',
+                      //         valueField: 'value',
+                      //         okButtonLabel: 'OK',
+                      //         cancelButtonLabel: 'CANCEL',
+                      //         hintWidget:
+                      //             Text('Among whom the money is shared?'),
+                      //         onSaved: (val) {
+                      //           _shareEditor = val.join(',');
+                      //         },
+                      //         validator: (value) => (value ?? "").isEmpty
+                      //             ? "Required field *"
+                      //             : null,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      SizedBox(height: 15),
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SharePage(
+                                    value: 1000,
+                                    users: widget.model.getUsers,
+                                    callback: getTheValue,
+                                  ),
                                 ),
-                              ),
-                              title: Text(
-                                "Shared Between",
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              dataSource: model.getUsers
-                                  .map((e) => {
-                                        "value": e,
-                                        "display": e,
-                                      })
-                                  .toList(),
-                              textField: 'display',
-                              valueField: 'value',
-                              okButtonLabel: 'OK',
-                              cancelButtonLabel: 'CANCEL',
-                              hintWidget:
-                                  Text('Among whom the money is shared?'),
-                              onSaved: (val) {
-                                _shareEditor = val.join(',');
-                              },
-                              validator: (value) => (value ?? "").isEmpty
-                                  ? "Required field *"
-                                  : null,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.people_outline,
+                                  color: Colors.black.withOpacity(.6),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        "Shared Between",
+                                        style: TextStyle(fontSize: 15),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          if (aList.length != 0)
+                            Column(
+                              children: List.generate(aList.length, (index) {
+                                return Text(aList[index].toString());
+                              }),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, top: 8),
+                            child: Divider(
+                              // thickness: 2,
+                              indent: 2,
+                              color: Colors.black,
+                            ),
+                          )
                         ],
                       )
                     ],
@@ -258,5 +310,12 @@ class NewEntryLog extends StatelessWidget {
               ),
       ),
     );
+  }
+
+  getTheValue(val) {
+    print("from the new entry page");
+    print(val);
+    aList = val;
+    setState(() {});
   }
 }
