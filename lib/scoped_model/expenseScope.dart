@@ -67,8 +67,8 @@ class ExpenseModel extends Model {
     SharedPreferences.getInstance().then((prefs) {
       users = prefs.getStringList('users') ?? [];
       categories = prefs.getStringList('categories') ?? [];
-      print(users);
-      print(categories);
+      // print(users);
+      // print(categories);
       if (users.length != 0 && categories.length != 0) {
         expenses =
             (json.decode(prefs.getString('expenses')) as Iterable).map((e) => Map<String, String>.from(e))?.toList();

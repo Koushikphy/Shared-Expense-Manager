@@ -43,8 +43,7 @@ class _StatsPageState extends State<StatsPage> {
                 tileMode: TileMode.clamp),
           ),
           child: Padding(
-            padding:
-                const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 15),
+            padding: const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 15),
             child: Column(
               children: [
                 Row(
@@ -68,8 +67,7 @@ class _StatsPageState extends State<StatsPage> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                (widget.model.getUsers.length == 0 ||
-                        widget.model.getCategories.length == 0)
+                (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
                     ? Column(
                         children: [
                           SizedBox(
@@ -88,12 +86,9 @@ class _StatsPageState extends State<StatsPage> {
                       )
                     : Column(
                         children: [
-                          makeStatCrad("Total Spends", Colors.pink,
-                              MaterialCommunityIcons.shopping),
-                          makeStatCrad("Total Owe", Colors.green,
-                              MaterialIcons.account_balance),
-                          makeStatCrad(
-                              "Net Owe", Colors.purple, MaterialIcons.payment),
+                          makeStatCrad("Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
+                          makeStatCrad("Total Owe", Colors.green, MaterialIcons.account_balance),
+                          makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
                         ],
                       )
               ],
@@ -115,17 +110,14 @@ class _StatsPageState extends State<StatsPage> {
       child: Card(
         elevation: 5.0,
         child: Container(
-          decoration: BoxDecoration(
-              color: white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: grey.withOpacity(0.01),
-                  spreadRadius: 10,
-                  blurRadius: 3,
-                  // changes position of shadow
-                ),
-              ]),
+          decoration: BoxDecoration(color: white, borderRadius: BorderRadius.circular(10), boxShadow: [
+            BoxShadow(
+              color: grey.withOpacity(0.01),
+              spreadRadius: 10,
+              blurRadius: 3,
+              // changes position of shadow
+            ),
+          ]),
           width: double.infinity,
           child: Column(
             children: [
@@ -183,7 +175,8 @@ class _StatsPageState extends State<StatsPage> {
                             Container(
                               width: (size.width - 40) * .35,
                               child: Text(
-                                thisStats[_users[index]].toStringAsFixed(2),
+                                // align these values to the decimal places
+                                "₹  ${thisStats[_users[index]].toStringAsFixed(2)}",
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: black,

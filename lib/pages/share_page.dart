@@ -104,8 +104,8 @@ class _SharePageState extends State<SharePage> {
                               }
                             for (int i = 0; i < widget.users.length; i++)
                               _controler[i].text = _initAmount[i].toStringAsFixed(2);
-                            print('here==>');
-                            print(widget.value == _initAmount.fold(0, (a, b) => a + b));
+                            // print('here==>');
+                            // print(widget.value == _initAmount.fold(0, (a, b) => a + b));
                             // _controler[i].text = _initAmount[i].toStringAsFixed(2);
                             // print('diff value 1 : $diff');
                             // _initAmount[2] += diff;

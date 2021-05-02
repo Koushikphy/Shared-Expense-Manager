@@ -24,7 +24,6 @@ class _NewEntryLogState extends State<NewEntryLog> {
   TextEditingController _amountEditor = TextEditingController();
   TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
   TextEditingController _categoryEditor = TextEditingController();
-  String _shareEditor;
   double _oldVal = 0.0;
   bool showError = false;
 
@@ -36,7 +35,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     // print(aList.length);
     // print(model.getExpenses);
     return Scaffold(
@@ -53,7 +52,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                   "item": _itemEditor.text,
                   "category": _categoryEditor.text,
                   "amount": _amountEditor.text,
-                  "shareBy": _shareEditor
+                  "shareBy": aList.map((e) => e.toString()).join(',')
                 });
             },
             icon: Icon(Icons.save),
@@ -151,14 +150,14 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         ),
 
                         onChanged: (val) {
-                          print(_oldVal);
-                          print(double.parse(val));
-                          print(_oldVal != double.parse(val));
-                          if (_oldVal != double.parse(val))
-                            setState(() {
-                              _oldVal = double.parse(val); // jsut don't reset the values;
-                              aList = List.filled(widget.model.users.length, 0.0);
-                            });
+                          // print(_oldVal);
+                          // print(double.parse(val));
+                          // print(_oldVal != double.parse(val));
+                          // if (_oldVal != double.parse(val))
+                          //   setState(() {
+                          //     _oldVal = double.parse(val); // jsut don't reset the values;
+                          //     aList = List.filled(widget.model.users.length, 0.0);
+                          //   });
                           // print(data);
                         },
                         // onSaved: (String value) {},
@@ -223,7 +222,10 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       InkWell(
                         onTap: () {
                           var val = double.parse(_amountEditor.text);
-                          if (val != null)
+                          if (val != null) {
+                            if (aList.fold(0, (a, b) => a + b) != val)
+                              aList = List.filled(widget.model.users.length, 0.0);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -235,6 +237,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                 ),
                               ),
                             );
+                          }
                         },
                         child: Column(
                           children: [
@@ -257,37 +260,36 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                 ),
                               ],
                             ),
-                            
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    children: List.generate(
-                                      aList.length,
-                                      (index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(right: 10, bottom: 5),
-                                          child: Text(
-                                            widget.model.getUsers[index],
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                        );
-                                      },
-                                    ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Column(
+                                  children: List.generate(
+                                    aList.length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 10, bottom: 5),
+                                        child: Text(
+                                          widget.model.getUsers[index],
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  Column(
-                                    children: List.generate(
-                                      aList.length,
-                                      (index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(left: 10, bottom: 5),
-                                          child: Text(aList[index].toStringAsFixed(2), style: TextStyle(fontSize: 15)),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
+                                ),
+                                Column(
+                                  children: List.generate(
+                                    aList.length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left: 10, bottom: 5),
+                                        child: Text(aList[index].toStringAsFixed(2), style: TextStyle(fontSize: 15)),
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 30, top: 8),
                               child: Divider(
@@ -331,6 +333,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
     var val = double.parse(_amountEditor.text);
     if (val == null) return false;
     if (summed == val) {
+      showError = false;
       return true;
     } else {
       setState(() {
