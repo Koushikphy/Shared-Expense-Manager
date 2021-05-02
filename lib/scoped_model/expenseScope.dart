@@ -1,88 +1,20 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 class ExpenseModel extends Model {
   ExpenseModel() {
     setInitValues();
   }
 
-  List<String> categories = []; // ["Bills", "Food", "Misc"];
+  List<String> categories = [];
 
-  List<String> users = []; //["Koushik", "Satyam", "Joy"];
+  List<String> users = [];
 
-  Map<String, Map<String, double>> expenseStats = {
-    // "Total Spends": {"Koushik": 0, "Satyam": 0, "Joy": 0},
-    // "Total Owe": {"Koushik": 0, "Satyam": 0, "Joy": 0},
-    // "Net Owe": {"Koushik": 0, "Satyam": 0, "Joy": 0}
-  };
+  Map<String, Map<String, double>> expenseStats = {};
 
-  List<Map<String, String>> expenses = [
-    // {
-    //   "date": "01-03-2021",
-    //   "person": "Satyam",
-    //   "item": "Groceries",
-    //   "category": "Food",
-    //   "amount": "29",
-    //   "shareBy": "All"
-    // },
-    // {
-    //   "date": "01-03-2021",
-    //   "person": "Joy",
-    //   "item": "Milk",
-    //   "category": "Food",
-    //   "amount": "220",
-    //   "shareBy": "Koushik"
-    // },
-    // {
-    //   "date": "02-03-2021",
-    //   "person": "Joy",
-    //   "item": "Misc",
-    //   "category": "Food",
-    //   "amount": "200",
-    //   "shareBy": "Satyam"
-    // },
-    // {
-    //   "date": "02-03-2021",
-    //   "person": "Koushik",
-    //   "item": "Rent",
-    //   "category": "Bills",
-    //   "amount": "64",
-    //   "shareBy": "All"
-    // },
-    // {
-    //   "date": "02-03-2021",
-    //   "person": "Koushik",
-    //   "item": "Gas",
-    //   "category": "Food",
-    //   "amount": "64",
-    //   "shareBy": "All"
-    // },
-    // {
-    //   "date": "02-03-2021",
-    //   "person": "Koushik",
-    //   "item": "Water",
-    //   "category": "Food",
-    //   "amount": "64",
-    //   "shareBy": "All"
-    // },
-    // {
-    //   "date": "02-03-2021",
-    //   "person": "Koushik",
-    //   "item": "Vegetables",
-    //   "category": "Food",
-    //   "amount": "64",
-    //   "shareBy": "All"
-    // },
-    // {
-    //   "date": "02-03-2021",
-    //   "person": "Koushik",
-    //   "item": "Misc",
-    //   "category": "Food",
-    //   "amount": "64",
-    //   "shareBy": "All"
-    // },
-  ];
+  List<Map<String, String>> expenses = [];
 
   Future<SharedPreferences> mySharedPref = SharedPreferences.getInstance();
   List<Map<String, String>> get getExpenses => expenses;
@@ -128,21 +60,23 @@ class ExpenseModel extends Model {
   }
 
   void setInitValues() {
-    // SharedPreferences.getInstance().then((prefs) {
-    //   users = prefs.getStringList('users') ?? [];
-    //   categories = prefs.getStringList('categories') ?? [];
-    //   print(users);
-    //   print(categories);
-    //   if (users.length != 0 && categories.length != 0) {
-    //     expenses = (json.decode(prefs.getString('expenses')) as Iterable)
-    //         .map((e) => Map<String, String>.from(e))
-    //         ?.toList();
-    //   } else {
-    //     expenses = [];
-    //   }
-    //   notifyListeners();
-    // });
-    testData();
+    if (kDebugMode) {
+      testData();
+      return;
+    }
+    SharedPreferences.getInstance().then((prefs) {
+      users = prefs.getStringList('users') ?? [];
+      categories = prefs.getStringList('categories') ?? [];
+      print(users);
+      print(categories);
+      if (users.length != 0 && categories.length != 0) {
+        expenses =
+            (json.decode(prefs.getString('expenses')) as Iterable).map((e) => Map<String, String>.from(e))?.toList();
+      } else {
+        expenses = [];
+      }
+      notifyListeners();
+    });
   }
 
   void upDateUserData(bool u, bool c, bool e) async {
@@ -153,8 +87,7 @@ class ExpenseModel extends Model {
         });
   }
 
-  void newDataLoaded(List<String> _uList, List<String> _cList,
-      List<Map<String, String>> _exList) {
+  void newDataLoaded(List<String> _uList, List<String> _cList, List<Map<String, String>> _exList) {
     users = _uList;
     categories = _cList;
     expenses = _exList;
@@ -172,17 +105,14 @@ class ExpenseModel extends Model {
     expenses.forEach(
       (entry) {
         double amount = double.parse(entry["amount"]);
-        List shareBy = entry["shareBy"].split(',');
-        shareBy = shareBy[0] == "All" ? users : shareBy;
-        double shareAmount = amount / shareBy.length;
+        List shareBy = entry["shareBy"].split(',').map((e) => double.parse(e)).toList();
         tmpStats["Total Spends"][entry["person"]] += amount;
 
-        shareBy.forEach(
-          (per) {
-            tmpStats["Total Owe"][per] += shareAmount;
-            tmpStats["Net Owe"][per] += shareAmount;
-          },
-        );
+        for (int i = 0; i < users.length; i++) {
+          tmpStats["Total Owe"][users[i]] += shareBy[i];
+          tmpStats["Net Owe"][users[i]] += shareBy[i];
+        }
+
         tmpStats["Net Owe"][entry["person"]] -= amount;
       },
     );
@@ -193,78 +123,46 @@ class ExpenseModel extends Model {
   testData() {
     categories = ["Bills", "Food", "Misc"];
 
-    users = ["Koushik", "Satyam", "Joy"];
+    users = ["John", "Sam", "Will"];
 
     expenseStats = {
-      "Total Spends": {"Koushik": 0, "Satyam": 0, "Joy": 0},
-      "Total Owe": {"Koushik": 0, "Satyam": 0, "Joy": 0},
-      "Net Owe": {"Koushik": 0, "Satyam": 0, "Joy": 0}
+      "Total Spends": {"John": 0, "Sam": 0, "Will": 0},
+      "Total Owe": {"John": 0, "Sam": 0, "Will": 0},
+      "Net Owe": {"John": 0, "Sam": 0, "Will": 0}
     };
 
     expenses = [
       {
         "date": "01-03-2021",
-        "person": "Satyam",
+        "person": "Sam",
         "item": "Groceries",
         "category": "Food",
-        "amount": "290",
-        "shareBy": "All"
+        "amount": "300",
+        "shareBy": "100,100,100"
       },
       {
         "date": "01-03-2021",
-        "person": "Joy",
-        "item": "Milk",
+        "person": "Will",
+        "item": "Water",
         "category": "Food",
-        "amount": "220",
-        "shareBy": "Koushik"
+        "amount": "210",
+        "shareBy": "210,0,0"
       },
       {
         "date": "02-03-2021",
-        "person": "Joy",
+        "person": "Will",
         "item": "Misc",
         "category": "Food",
         "amount": "200",
-        "shareBy": "Satyam"
+        "shareBy": "0,200,0"
       },
       {
         "date": "02-03-2021",
-        "person": "Koushik",
+        "person": "John",
         "item": "Rent",
         "category": "Bills",
-        "amount": "64",
-        "shareBy": "All"
-      },
-      {
-        "date": "02-03-2021",
-        "person": "Koushik",
-        "item": "Gas",
-        "category": "Food",
-        "amount": "64",
-        "shareBy": "All"
-      },
-      {
-        "date": "02-03-2021",
-        "person": "Koushik",
-        "item": "Water",
-        "category": "Food",
-        "amount": "64",
-        "shareBy": "All"
-      },
-      {
-        "date": "02-03-2021",
-        "person": "Koushik",
-        "item": "Vegetables",
-        "category": "Food",
-        "amount": "64",
-        "shareBy": "All"
-      },
-      {
-        "date": "02-03-2021",
-        "person": "Koushik",
-        "item": "Misc",
-        "category": "Food",
-        "amount": "64",
-        "shareBy": "All"
+        "amount": "66",
+        "shareBy": "22,22,22"
       },
     ];
   }

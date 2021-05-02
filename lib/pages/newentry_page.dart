@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+// import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
@@ -18,18 +18,26 @@ class NewEntryLog extends StatefulWidget {
 
 class _NewEntryLogState extends State<NewEntryLog> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<double> aList = [];
+  List<double> aList;
+  TextEditingController _itemEditor = TextEditingController();
+  TextEditingController _personEditor = TextEditingController();
+  TextEditingController _amountEditor = TextEditingController();
+  TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
+  TextEditingController _categoryEditor = TextEditingController();
+  String _shareEditor;
+  double _oldVal = 0.0;
+  bool showError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    aList = List.filled(widget.model.users.length, 0.0);
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print(aList.length);
-    TextEditingController _itemEditor = TextEditingController();
-    TextEditingController _personEditor = TextEditingController();
-    TextEditingController _amountEditor = TextEditingController();
-    TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
-    TextEditingController _categoryEditor = TextEditingController();
-    String _shareEditor;
+    // print(aList.length);
     // print(model.getExpenses);
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +46,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
           IconButton(
             onPressed: () {
               // formKey.currentState.validate();
-              if (formKey.currentState.validate())
+              if (formKey.currentState.validate() && sharedProperly())
                 widget.model.addExpense({
                   "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
                   "person": _personEditor.text,
@@ -141,10 +149,18 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           hintText: 'How much money is spent?',
                           labelText: "Amount",
                         ),
-                        // onChanged: (val) {
-                        //   data["amount"] = val;
-                        //   // print(data);
-                        // },
+
+                        onChanged: (val) {
+                          print(_oldVal);
+                          print(double.parse(val));
+                          print(_oldVal != double.parse(val));
+                          if (_oldVal != double.parse(val))
+                            setState(() {
+                              _oldVal = double.parse(val); // jsut don't reset the values;
+                              aList = List.filled(widget.model.users.length, 0.0);
+                            });
+                          // print(data);
+                        },
                         // onSaved: (String value) {},
                         validator: (val) {
                           if (val.isEmpty) return "Required filed *";
@@ -203,72 +219,26 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         validator: (value) => value.isEmpty ? "Required field *" : null,
                       ),
                       SizedBox(height: 15),
-                      // Row(
-                      //   children: <Widget>[
-                      //     Icon(
-                      //       Icons.people_outline,
-                      //       color: Colors.black.withOpacity(.6),
-                      //     ),
-                      //     Container(
-                      //       width: size.width * .82,
-                      //       child: MultiSelectFormField(
-                      //         // lea
-                      //         autovalidate: false,
-                      //         chipBackGroundColor: Colors.deepPurple.shade200,
-                      //         chipLabelStyle:
-                      //             TextStyle(fontWeight: FontWeight.bold),
-                      //         dialogTextStyle:
-                      //             TextStyle(fontWeight: FontWeight.bold),
-                      //         checkBoxActiveColor: Colors.blue,
-                      //         checkBoxCheckColor: Colors.white,
-                      //         dialogShapeBorder: RoundedRectangleBorder(
-                      //           borderRadius: BorderRadius.all(
-                      //             Radius.circular(5.0),
-                      //           ),
-                      //         ),
-                      //         title: Text(
-                      //           "Shared Between",
-                      //           style: TextStyle(fontSize: 13),
-                      //         ),
-                      //         dataSource: widget.model.getUsers
-                      //             .map((e) => {
-                      //                   "value": e,
-                      //                   "display": e,
-                      //                 })
-                      //             .toList(),
-                      //         textField: 'display',
-                      //         valueField: 'value',
-                      //         okButtonLabel: 'OK',
-                      //         cancelButtonLabel: 'CANCEL',
-                      //         hintWidget:
-                      //             Text('Among whom the money is shared?'),
-                      //         onSaved: (val) {
-                      //           _shareEditor = val.join(',');
-                      //         },
-                      //         validator: (value) => (value ?? "").isEmpty
-                      //             ? "Required field *"
-                      //             : null,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                       SizedBox(height: 15),
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SharePage(
-                                    value: 1000,
-                                    users: widget.model.getUsers,
-                                    callback: getTheValue,
-                                  ),
+                      InkWell(
+                        onTap: () {
+                          var val = double.parse(_amountEditor.text);
+                          if (val != null)
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SharePage(
+                                  value: val,
+                                  users: widget.model.getUsers,
+                                  initValue: aList,
+                                  callback: getTheValue,
                                 ),
-                              );
-                            },
-                            child: Row(
+                              ),
+                            );
+                        },
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
                                 Icon(
                                   Icons.people_outline,
@@ -280,29 +250,64 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                     children: [
                                       Text(
                                         "Shared Between",
-                                        style: TextStyle(fontSize: 15),
+                                        style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(.7)),
                                       )
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          if (aList.length != 0)
-                            Column(
-                              children: List.generate(aList.length, (index) {
-                                return Text(aList[index].toString());
-                              }),
+                            
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: List.generate(
+                                      aList.length,
+                                      (index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(right: 10, bottom: 5),
+                                          child: Text(
+                                            widget.model.getUsers[index],
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Column(
+                                    children: List.generate(
+                                      aList.length,
+                                      (index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(left: 10, bottom: 5),
+                                          child: Text(aList[index].toStringAsFixed(2), style: TextStyle(fontSize: 15)),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30, top: 8),
+                              child: Divider(
+                                // thickness: 2,
+                                indent: 2,
+                                color: Colors.black,
+                              ),
                             ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30, top: 8),
-                            child: Divider(
-                              // thickness: 2,
-                              indent: 2,
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
+                            if (showError)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "* Amount should be shared properly.",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              )
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -313,9 +318,25 @@ class _NewEntryLogState extends State<NewEntryLog> {
   }
 
   getTheValue(val) {
-    print("from the new entry page");
-    print(val);
-    aList = val;
-    setState(() {});
+    // print("from the new entry page");
+    // print(val);
+    // print(val.runtimeType);
+    setState(() {
+      aList = val;
+    });
+  }
+
+  sharedProperly() {
+    double summed = aList.fold(0, (a, b) => a + b);
+    var val = double.parse(_amountEditor.text);
+    if (val == null) return false;
+    if (summed == val) {
+      return true;
+    } else {
+      setState(() {
+        showError = true;
+      });
+      return false;
+    }
   }
 }

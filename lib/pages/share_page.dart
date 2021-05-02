@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_expenses/theme/colors.dart';
-import 'package:shared_expenses/scoped_model/expenseScope.dart';
+// import 'package:shared_expenses/scoped_model/expenseScope.dart';
 
 class SharePage extends StatefulWidget {
   final double value;
   final List<String> users;
   final Function callback;
-
-  SharePage({Key key, @required this.value, @required this.users, @required this.callback}) : super(key: key);
+  final List<double> initValue;
+  SharePage({Key key, @required this.value, @required this.users, @required this.initValue, @required this.callback})
+      : super(key: key);
 
   @override
   _SharePageState createState() => _SharePageState();
@@ -17,15 +18,16 @@ class _SharePageState extends State<SharePage> {
   List<bool> _checkList;
   List<double> _initAmount;
   List<TextEditingController> _controler;
-  TextEditingController _cCheck;
+  // TextEditingController _cCheck;
   bool showError = false;
+  // bool _fieldModifiedManually = false;
 
   @override
   void initState() {
     super.initState();
-    _checkList = List.filled(widget.users.length, false);
-    _initAmount = List.filled(widget.users.length, 0);
-    _controler = List.generate(widget.users.length, (i) => TextEditingController(text: '0.00'));
+    _initAmount = widget.initValue; //.map((e) => double.parse(e)).toList();
+    _checkList = _initAmount.map((e) => e != 0).toList(); //  List.filled(widget.users.length, false);
+    _controler = List.generate(widget.users.length, (i) => TextEditingController(text: _initAmount[i].toString()));
   }
 
   @override
@@ -40,7 +42,7 @@ class _SharePageState extends State<SharePage> {
             onPressed: () {
               if (isSumEqual()) {
                 // widget.callback(_controler.map((e) => e.text));
-                widget.callback([500.0, 500.0, 0.0]);
+                widget.callback(_controler.map((e) => double.parse(e.text)).toList());
                 Navigator.pop(context);
               } else {
                 setState(() {
@@ -83,16 +85,33 @@ class _SharePageState extends State<SharePage> {
                           value: _checkList[index],
                           onChanged: (bool val) {
                             _checkList[index] = val;
-                            int _sUsers = _checkList.where((element) => element == true).length;
-                            for (int i = 0; i < widget.users.length; i++) {
-                              if (_checkList[i]) _initAmount[i] = widget.value / _sUsers;
+
+                            // handle situation where the money can be shared properly, like dividing 10 among 3 people
+                            // in that case we will just add the remainning value to a random user;
+                            // add to first user for now;
+                            // fix this problem, how to record this kind of values
+                            double amount =
+                                round2(widget.value / _checkList.where((element) => element == true).length);
+                            for (int i = 0; i < widget.users.length; i++) _initAmount[i] = _checkList[i] ? amount : 0.0;
+
+                            double diff = widget.value - _initAmount.fold(0, (a, b) => a + b);
+                            if (diff != 0)
+                              for (int i = 0; i < widget.users.length; i++) {
+                                if (_checkList[i]) {
+                                  _initAmount[i] += diff;
+                                  break;
+                                }
+                              }
+                            for (int i = 0; i < widget.users.length; i++)
                               _controler[i].text = _initAmount[i].toStringAsFixed(2);
-                            }
-                            print(_initAmount[0]);
-                            print(_controler[0].text);
-                            setState(
-                              () {},
-                            );
+                            print('here==>');
+                            print(widget.value == _initAmount.fold(0, (a, b) => a + b));
+                            // _controler[i].text = _initAmount[i].toStringAsFixed(2);
+                            // print('diff value 1 : $diff');
+                            // _initAmount[2] += diff;
+                            // _controler[2].text = _initAmount[2].toStringAsFixed(2);
+                            // print('diff value 2 : $diff');
+                            setState(() {});
                           },
                         ),
                       ),
@@ -108,6 +127,9 @@ class _SharePageState extends State<SharePage> {
                           controller: _controler[index],
                           // decoration: InputDecoration(labelText: "Share amount"),
                           keyboardType: TextInputType.number,
+                          // onChanged: (value) {
+                          //   _fieldModifiedManually = true;
+                          // },
                           // onSubmitted: (value) {
                           //   setState(
                           //     () {
@@ -143,7 +165,12 @@ class _SharePageState extends State<SharePage> {
     );
   }
 
+  double round2(double val) {
+    return double.parse(val.toStringAsFixed(2));
+  }
+
   bool isSumEqual() {
+    // if (!_fieldModifiedManually) return true;
     double val = 0.0;
     _controler.forEach((element) {
       val += double.parse(element.text);

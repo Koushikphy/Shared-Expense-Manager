@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:path_provider/path_provider.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:intl/intl.dart';
@@ -36,8 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
         body: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height -
-                56, //56 height of the bottom navigation bar
+            height: MediaQuery.of(context).size.height - 56, //56 height of the bottom navigation bar
             child: getBody(),
           ),
         ));
@@ -67,8 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 tileMode: TileMode.clamp),
           ),
           child: Padding(
-            padding:
-                const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 25),
+            padding: const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -282,14 +279,9 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
-                List<String> uList = userControler.text
-                    .toString()
-                    .split(',')
-                    .map((e) => e.trim())
-                    .toList();
+                List<String> uList = userControler.text.toString().split(',').map((e) => e.trim()).toList();
 
-                if (widget.model.getUsers.length != 0 &&
-                    notContains(widget.model.getUsers, uList)) {
+                if (widget.model.getUsers.length != 0 && notContains(widget.model.getUsers, uList)) {
                   showWarningDialog("users");
                 } else {
                   widget.model.setUsers(uList);
@@ -332,14 +324,9 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
-                List<String> cList = categoryControler.text
-                    .toString()
-                    .split(',')
-                    .map((e) => e.trim())
-                    .toList();
+                List<String> cList = categoryControler.text.toString().split(',').map((e) => e.trim()).toList();
 
-                if (widget.model.getCategories.length != 0 &&
-                    notContains(widget.model.getCategories, cList)) {
+                if (widget.model.getCategories.length != 0 && notContains(widget.model.getCategories, cList)) {
                   showWarningDialog("users");
                 } else {
                   widget.model.setCategories(cList);
@@ -467,15 +454,11 @@ class _ProfilePageState extends State<ProfilePage> {
     String fileName = result.files.single.path;
     var data = json.decode(File(fileName).readAsStringSync());
     // print(data);
-    List<String> _uList =
-        (data["users"] as List).map((e) => e as String).toList();
+    List<String> _uList = (data["users"] as List).map((e) => e as String).toList();
 
-    List<String> _cList =
-        (data["categories"] as List).map((e) => e as String).toList();
+    List<String> _cList = (data["categories"] as List).map((e) => e as String).toList();
 
-    List<Map<String, String>> _exList = (data["expenses"] as List)
-        .map((e) => Map<String, String>.from(e))
-        .toList();
+    List<Map<String, String>> _exList = (data["expenses"] as List).map((e) => Map<String, String>.from(e)).toList();
 
     widget.model.newDataLoaded(_uList, _cList, _exList);
   }
@@ -487,7 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
     String timeStamp = DateFormat('dd_MM_yyyy').format(DateTime.now());
 
     // String path = await FilePicker.platform.getDirectoryPath();
-    // weired but I can't get the permission to save the data to an aribtraty storage, 
+    // weired but I can't get the permission to save the data to an aribtraty storage,
     // it returns permission denied, so the file is saved in a given storage only for now.
     final directory = await getExternalStorageDirectory();
     String fileName = "${directory.path}/Expenses_$timeStamp.txt";

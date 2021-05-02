@@ -2,25 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+// import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:shared_expenses/theme/colors.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import 'package:shared_expenses/pages/share_page.dart';
 
-class DetailLog extends StatelessWidget {
+class DetailLog extends StatefulWidget {
   final int index;
   final ExpenseModel model;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  DetailLog({Key key, @required this.index, @required this.model})
-      : super(key: key);
+  DetailLog({Key key, @required this.index, @required this.model}) : super(key: key);
+
+  @override
+  _DetailLogState createState() => _DetailLogState();
+}
+
+class _DetailLogState extends State<DetailLog> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  List<double> aList;
+  bool showError = false;
+  ExpenseModel model;
+  int index;
+  List<String> categories;
+  List<String> users;
+  Map<String, String> data;
+
+  @override
+  void initState() {
+    super.initState();
+    aList = widget.model.getExpenses[widget.index]["shareBy"].split(',').map((e) => double.parse(e)).toList();
+    model = widget.model;
+    index = widget.index;
+    categories = model.getCategories;
+    users = model.getUsers;
+    data = {...widget.model.getExpenses[index]};
+  }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    List<String> categories = model.getCategories;
-    List<String> users = model.getUsers;
-    // print(model.getUsers);
-    Map<String, String> data = {...model.getExpenses[index]};
+    // instead of the data use this with the texediting controler.
+    // var size = MediaQuery.of(context).size;
     // print(data);
     return Scaffold(
       appBar: AppBar(
@@ -28,8 +49,9 @@ class DetailLog extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              // print(data);
-              if (formKey.currentState.validate()) {
+              if (formKey.currentState.validate() && sharedProperly()) {
+                // print("check this");
+                // print(data);
                 model.editExpense(index, data);
                 Navigator.pop(context);
               }
@@ -75,8 +97,7 @@ class DetailLog extends StatelessWidget {
                     data["item"] = val;
                     // print(data);
                   },
-                  validator: (value) =>
-                      value.isEmpty ? "Required filed *" : null,
+                  validator: (value) => value.isEmpty ? "Required filed *" : null,
                 ),
                 SizedBox(height: 15),
                 SelectFormField(
@@ -93,8 +114,7 @@ class DetailLog extends StatelessWidget {
                   onChanged: (val) {
                     data["person"] = val;
                   },
-                  validator: (value) =>
-                      value.isEmpty ? "Required filed *" : null,
+                  validator: (value) => value.isEmpty ? "Required filed *" : null,
                   // onSaved: (val) => print(val),
                 ),
                 TextFormField(
@@ -123,8 +143,7 @@ class DetailLog extends StatelessWidget {
                 DateTimePicker(
                   type: DateTimePickerType.date,
                   dateMask: 'd MMM, yyyy',
-                  initialValue:
-                      DateFormat("dd-MM-yyyy").parse(data['date']).toString(),
+                  initialValue: DateFormat("dd-MM-yyyy").parse(data['date']).toString(),
                   firstDate: DateTime(2000),
                   lastDate: DateTime(2100),
                   icon: Icon(Icons.event),
@@ -133,10 +152,8 @@ class DetailLog extends StatelessWidget {
                     data["date"] = DateFormat('dd-MM-yyyy').format(
                       DateFormat('yyyy-MM-dd').parse(val),
                     );
-                    // print(val);
                   },
-                  validator: (value) =>
-                      value.isEmpty ? "Required filed *" : null,
+                  validator: (value) => value.isEmpty ? "Required filed *" : null,
                 ),
                 SizedBox(height: 15),
                 SelectFormField(
@@ -154,57 +171,96 @@ class DetailLog extends StatelessWidget {
                   onChanged: (val) {
                     data["category"] = val;
                   },
-                  validator: (value) =>
-                      value.isEmpty ? "Required filed *" : null,
-
-                  // onSaved: (val) => print(val),
+                  validator: (value) => value.isEmpty ? "Required filed *" : null,
                 ),
                 SizedBox(height: 15),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.people_outline,
-                      color: Colors.black.withOpacity(.6),
-                    ),
-                    Container(
-                      width: size.width * .82,
-                      child: MultiSelectFormField(
-                        autovalidate: false,
-                        chipBackGroundColor: Colors.deepPurple.shade200,
-                        chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-                        dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
-                        checkBoxActiveColor: Colors.blue,
-                        checkBoxCheckColor: Colors.white,
-                        dialogShapeBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                InkWell(
+                  onTap: () {
+                    var val = double.parse(data['amount']);
+                    if (val != null)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SharePage(
+                            value: val,
+                            users: widget.model.getUsers,
+                            initValue: val == aList.fold(0, (a, b) => a + b) ? aList : aList.map((e) => 0.0).toList(),
+                            callback: getTheValue,
+                          ),
                         ),
-                        title: Text(
-                          "Shared Between",
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        dataSource: users
-                            .map((e) => {
-                                  "value": e,
-                                  "display": e,
-                                })
-                            .toList(),
-                        textField: 'display',
-                        valueField: 'value',
-                        okButtonLabel: 'OK',
-                        initialValue: data['shareBy'] == "All"
-                            ? users
-                            : data['shareBy'].split(','),
-                        cancelButtonLabel: 'CANCEL',
-                        hintWidget: Text('Among whom the money is shared?'),
-                        onSaved: (val) {
-                          data["shareBy"] = val.toString();
-                          // print(data);
-                        },
-                        validator: (value) =>
-                            (value ?? "").isEmpty ? "Required field *" : null,
+                      );
+                  },
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            color: Colors.black.withOpacity(.6),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Shared Between",
+                                  style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(.7)),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: List.generate(
+                              aList.length,
+                              (index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 10, bottom: 5),
+                                  child: Text(
+                                    widget.model.getUsers[index],
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Column(
+                            children: List.generate(
+                              aList.length,
+                              (index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 10, bottom: 5),
+                                  child: Text(aList[index].toStringAsFixed(2), style: TextStyle(fontSize: 15)),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30, top: 8),
+                        child: Divider(
+                          // thickness: 2,
+                          indent: 2,
+                          color: Colors.black,
+                        ),
+                      ),
+                      if (showError)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "* Amount should be shared properly.",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ],
+                        )
+                    ],
+                  ),
                 )
               ],
             ),
@@ -212,5 +268,28 @@ class DetailLog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getTheValue(val) {
+    setState(() {
+      aList = val;
+      data['shareBy'] = aList.map((e) => e.toString()).join(',');
+      print("from teh callback ${aList.map((e) => e.toString()).join(',')}");
+      print(data);
+    });
+  }
+
+  sharedProperly() {
+    double summed = aList.fold(0, (a, b) => a + b);
+    var val = double.parse(data['amount']);
+    if (val == null) return false;
+    if (summed == val) {
+      return true;
+    } else {
+      setState(() {
+        showError = true;
+      });
+      return false;
+    }
   }
 }
