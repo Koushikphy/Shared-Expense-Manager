@@ -37,12 +37,10 @@ class _RootAppState extends State<RootApp> {
           child: IndexedStack(
             index: pageIndex,
             children: <Widget>[
-              DailyPage(model: model, callback: callback),
+              DailyPage(model1: model, callback: callback),
               StatsPage(model: model, callback: callback),
-              // BudgetPage(),
-              // MyChartPage(),
               ProfilePage(model: model),
-              NewEntryLog(model: model, callback: callback)
+              // NewEntryLog(model: model, callback: callback)
             ],
           ),
           onSwipeRight: () {
@@ -52,7 +50,7 @@ class _RootAppState extends State<RootApp> {
           },
           onSwipeLeft: () {
             setState(() {
-              if (pageIndex < 3) pageIndex++;
+              if (pageIndex < 2) pageIndex++;
             });
           },
         ),
@@ -80,7 +78,17 @@ class _RootAppState extends State<RootApp> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            selectedTab(3);
+            // selectedTab(3);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewEntryLog(
+                  callback: callback,
+                  context: context,
+                ),
+              ),
+            );
           },
           child: Icon(
             Icons.add,

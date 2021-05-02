@@ -6,12 +6,16 @@ import 'package:select_form_field/select_form_field.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class NewEntryLog extends StatefulWidget {
-  final ExpenseModel model;
+  // final ExpenseModel model;
   final Function callback;
-  NewEntryLog({Key key, @required this.model, this.callback}) : super(key: key);
-
+  final BuildContext context;
+  final int index;
+  // NewEntryLog({Key key, @required this.model, this.callback,  this.context}) : super(key: key);
+  NewEntryLog({Key key, this.callback, this.context, this.index = -999}) : super(key: key);
+  // ExpenseModel model
   @override
   _NewEntryLogState createState() => _NewEntryLogState();
 }
@@ -24,20 +28,34 @@ class _NewEntryLogState extends State<NewEntryLog> {
   TextEditingController _amountEditor = TextEditingController();
   TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
   TextEditingController _categoryEditor = TextEditingController();
-  double _oldVal = 0.0;
+  // double _oldVal = 0.0;
+  ExpenseModel model; //= ScopedModel.of(context);
   bool showError = false;
-
+  int count1 = 1;
+  int count2 = 0;
+  bool editRecord;
   @override
   void initState() {
+    model = ScopedModel.of(widget.context);
     super.initState();
-    aList = List.filled(widget.model.users.length, 0.0);
+    print('index ${widget.index}');
+    aList = List.filled(model.users.length, 0.0);
+    editRecord = widget.index != -999;
+    if (editRecord) {
+      Map<String, String> data = {...model.getExpenses[widget.index]};
+      _itemEditor.text = data['item'];
+      _personEditor.text = data['person'];
+      _amountEditor.text = data['amount'];
+      _dateEditor.text = DateFormat("dd-MM-yyyy").parse(data['date']).toString();
+      _categoryEditor.text = data['category'];
+      aList = model.getExpenses[widget.index]["shareBy"].split(',').map((e) => double.parse(e)).toList();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     // var size = MediaQuery.of(context).size;
     // print(aList.length);
-    // print(model.getExpenses);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
@@ -45,15 +63,27 @@ class _NewEntryLogState extends State<NewEntryLog> {
           IconButton(
             onPressed: () {
               // formKey.currentState.validate();
-              if (formKey.currentState.validate() && sharedProperly())
-                widget.model.addExpense({
+              if (formKey.currentState.validate() && sharedProperly()) {
+                Map<String, String> data = {
                   "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
                   "person": _personEditor.text,
                   "item": _itemEditor.text,
                   "category": _categoryEditor.text,
                   "amount": _amountEditor.text,
                   "shareBy": aList.map((e) => e.toString()).join(',')
-                });
+                };
+                editRecord ? model.editExpense(widget.index, data) : model.addExpense(data);
+                // model.addExpense({
+                //   "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
+                //   "person": _personEditor.text,
+                //   "item": _itemEditor.text,
+                //   "category": _categoryEditor.text,
+                //   "amount": _amountEditor.text,
+                //   "shareBy": aList.map((e) => e.toString()).join(',')
+                // });
+                widget.callback(0); //move to log page
+                Navigator.pop(context);
+              }
             },
             icon: Icon(Icons.save),
             color: Colors.white,
@@ -64,7 +94,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
           ),
           IconButton(
             onPressed: () {
-              formKey.currentState.reset();
+              if (editRecord) model.deleteExpense(widget.index);
+              Navigator.pop(context);
             },
             icon: Icon(Icons.delete),
             color: Colors.white,
@@ -76,7 +107,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
         ],
       ),
       body: SingleChildScrollView(
-        child: (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
+        key: ValueKey<int>(count1),
+        child: (model.getUsers.length == 0 || model.getCategories.length == 0)
             ? Container(
                 width: double.infinity,
                 child: Column(
@@ -92,6 +124,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                     TextButton(
                         onPressed: () {
                           widget.callback(2);
+                          Navigator.pop(context);
                         },
                         child: Text("Go to settings"))
                   ],
@@ -125,7 +158,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         icon: Icon(Icons.person_outline),
                         labelText: 'Spent By',
                         controller: _personEditor,
-                        items: widget.model.getUsers
+                        items: model.getUsers
                             .map((e) => {
                                   "value": e,
                                   "label": e,
@@ -156,7 +189,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           // if (_oldVal != double.parse(val))
                           //   setState(() {
                           //     _oldVal = double.parse(val); // jsut don't reset the values;
-                          //     aList = List.filled(widget.model.users.length, 0.0);
+                          //     aList = List.filled(model.users.length, 0.0);
                           //   });
                           // print(data);
                         },
@@ -196,13 +229,14 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           validator: (value) => value.isEmpty ? "Required field *" : null),
                       SizedBox(height: 15),
                       SelectFormField(
+                        key: ValueKey<int>(count2),
                         type: SelectFormFieldType.dropdown, // or can be dialog
                         // initialValue: data['category'],
                         controller: _categoryEditor,
                         icon: Icon(Icons.category),
                         hintText: 'Category of the spend',
                         labelText: 'Category',
-                        items: widget.model.getCategories
+                        items: model.getCategories
                             .map((e) => {
                                   "value": e,
                                   "label": e,
@@ -223,15 +257,14 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         onTap: () {
                           var val = double.parse(_amountEditor.text);
                           if (val != null) {
-                            if (aList.fold(0, (a, b) => a + b) != val)
-                              aList = List.filled(widget.model.users.length, 0.0);
+                            if (aList.fold(0, (a, b) => a + b) != val) aList = List.filled(model.users.length, 0.0);
 
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SharePage(
                                   value: val,
-                                  users: widget.model.getUsers,
+                                  users: model.getUsers,
                                   initValue: aList,
                                   callback: getTheValue,
                                 ),
@@ -270,7 +303,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                       return Padding(
                                         padding: const EdgeInsets.only(right: 10, bottom: 5),
                                         child: Text(
-                                          widget.model.getUsers[index],
+                                          model.getUsers[index],
                                           style: TextStyle(fontSize: 15),
                                         ),
                                       );
@@ -320,11 +353,17 @@ class _NewEntryLogState extends State<NewEntryLog> {
   }
 
   getTheValue(val) {
-    // print("from the new entry page");
-    // print(val);
-    // print(val.runtimeType);
     setState(() {
       aList = val;
+    });
+  }
+
+  resetPage() {
+    formKey.currentState.reset();
+    setState(() {
+      ++count1;
+      --count2;
+      // aList = List.filled(model.users.length, 0.0);
     });
   }
 

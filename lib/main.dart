@@ -14,10 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopedModel<ExpenseModel>(
-        model: myExpenseModel,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: RootApp(),
-        ));
+      model: myExpenseModel,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: RootApp(),
+      ),
+    );
   }
 }

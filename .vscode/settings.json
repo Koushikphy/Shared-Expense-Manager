@@ -10,5 +10,7 @@
         ".packages": true,
         "pubspec.lock": true,
         ".metadata": true,
+        "**/generated_plugin_registrant.dart":true,
+        "**/chart":true
     }
 }

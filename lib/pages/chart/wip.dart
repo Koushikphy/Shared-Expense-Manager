@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_expenses/theme/colors.dart';
-import "package:shared_expenses/pages/detail_page.dart";
+// import "package:shared_expenses/pages/detail_page.dart";
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:fl_chart/fl_chart.dart';
 

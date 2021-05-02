@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_expenses/theme/colors.dart';
-import "package:shared_expenses/pages/detail_page.dart";
+// import "package:shared_expenses/pages/detail_page.dart";
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
+import 'package:shared_expenses/pages/newentry_page.dart';
 
 class DailyPage extends StatelessWidget {
-  final ExpenseModel model;
+  final ExpenseModel model1;
   final Function callback;
-  const DailyPage({Key key, @required this.model, this.callback})
-      : super(key: key);
+  const DailyPage({Key key, @required this.model1, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +20,12 @@ class DailyPage extends StatelessWidget {
 
   Widget getBody(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
+    ExpenseModel model = ScopedModel.of(context);
+
     List<Map<String, String>> _expenses = model.getExpenses;
-    // print(model.expense);
+    // print(model.expenses);
+    //
     return Column(
       children: [
         Container(
@@ -41,17 +46,13 @@ class DailyPage extends StatelessWidget {
                 tileMode: TileMode.clamp),
           ),
           child: Padding(
-            padding:
-                const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 15),
+            padding: const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   "Expense Log",
-                  style: TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ],
             ),
@@ -89,25 +90,26 @@ class DailyPage extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailLog(index: i, model: model),
+                                      // builder: (context) => DetailLog(index: i, model: model),
+                                      builder: (context) => NewEntryLog(
+                                        callback: callback,
+                                        context: context,
+                                        index: i,
+                                      ),
                                     ),
                                   );
                                 },
                                 child: Column(
                                   children: <Widget>[
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: <Widget>[
                                         Container(
                                           // color: Colors.amber,
                                           width: size.width * 0.7,
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Text(
                                                 _expenses[i]['item'],
@@ -123,8 +125,7 @@ class DailyPage extends StatelessWidget {
                                                   Text(
                                                     _expenses[i]['person'],
                                                     style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w300,
+                                                      fontWeight: FontWeight.w300,
                                                       fontSize: 15,
                                                       //color: Colors.green
                                                     ),
@@ -139,13 +140,10 @@ class DailyPage extends StatelessWidget {
                                           width: size.width * 0.25,
                                           // color: Colors.red,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
+                                            padding: const EdgeInsets.only(right: 10),
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: <Widget>[
                                                 Text(
                                                   "₹ ${_expenses[i]['amount']}",
@@ -160,12 +158,10 @@ class DailyPage extends StatelessWidget {
                                                   _expenses[i]['date'],
                                                   style: TextStyle(
                                                     fontSize: 12,
-                                                    color:
-                                                        black.withOpacity(0.5),
+                                                    color: black.withOpacity(0.5),
                                                     fontWeight: FontWeight.w400,
                                                   ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                 )
                                               ],
                                             ),
@@ -174,8 +170,7 @@ class DailyPage extends StatelessWidget {
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, top: 8, right: 10),
+                                      padding: const EdgeInsets.only(left: 10, top: 8, right: 10),
                                       child: Divider(
                                         indent: 0,
                                         thickness: 0.8,
