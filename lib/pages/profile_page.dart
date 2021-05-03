@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 // import 'package:permission_handler/permission_handler.dart';
@@ -12,7 +11,6 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:intl/intl.dart';
 import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   final ExpenseModel model;
@@ -44,8 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget getBody() {
     // var size = MediaQuery.of(context).size;
     return Column(
-      // mainAxisSize: MainAxisSize.max,
-      // mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
@@ -98,9 +94,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 "Shared Expense Manager",
                 style: TextStyle(
                   fontSize: 25, color: myColors[2][0],
-                  // fontWeight: FontWeight.bold,
-
-                  //
                 ),
               ),
               Text(
@@ -130,7 +123,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       "Users",
                       style: TextStyle(
                         fontSize: 21,
-                        // fontWeight: FontWeight.bold,
                       ),
                     )
                   ],
@@ -242,7 +234,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  var _url = 'https://github.com/Koushikphy';
+  var _url = 'https://github.com/Koushikphy/Shared-Expense-Manager';
   void _launchURL() async {
     await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
   }
@@ -287,7 +279,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   widget.model.setUsers(uList);
                 }
 
-                // print(widget.model.getUsers);
               },
             ),
             TextButton(
@@ -446,10 +437,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if (result == null) {
       return;
     }
-
-    // String timeStamp = DateFormat('dd_MM_yyyy').format(DateTime.now());
-    // final directory = await getExternalStorageDirectory();
-    // String fileName = "${directory.path}/Expenses_$timeStamp.txt";
 
     String fileName = result.files.single.path;
     var data = json.decode(File(fileName).readAsStringSync());

@@ -11,6 +11,8 @@
         "pubspec.lock": true,
         ".metadata": true,
         "**/generated_plugin_registrant.dart":true,
-        "**/chart":true
+        "**/chart":true,
+        "**/.idea":true,
+        "**/.flutter*":true
     }
 }

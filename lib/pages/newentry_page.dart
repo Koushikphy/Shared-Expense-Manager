@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
-// import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class NewEntryLog extends StatefulWidget {
-  // final ExpenseModel model;
   final Function callback;
   final BuildContext context;
   final int index;
-  // NewEntryLog({Key key, @required this.model, this.callback,  this.context}) : super(key: key);
   NewEntryLog({Key key, this.callback, this.context, this.index = -999}) : super(key: key);
-  // ExpenseModel model
   @override
   _NewEntryLogState createState() => _NewEntryLogState();
 }
@@ -28,8 +24,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
   TextEditingController _amountEditor = TextEditingController();
   TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
   TextEditingController _categoryEditor = TextEditingController();
-  // double _oldVal = 0.0;
-  ExpenseModel model; //= ScopedModel.of(context);
+  ExpenseModel model;
   bool showError = false;
   int count1 = 1;
   int count2 = 0;
@@ -38,8 +33,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
   void initState() {
     model = ScopedModel.of(widget.context);
     super.initState();
-    print('index ${widget.index}');
-    aList = List.filled(model.users.length, 0.0);
+    aList = List.filled(model.getUsers.length, 0.0);
     editRecord = widget.index != -999;
     if (editRecord) {
       Map<String, String> data = {...model.getExpenses[widget.index]};
@@ -55,14 +49,12 @@ class _NewEntryLogState extends State<NewEntryLog> {
   @override
   Widget build(BuildContext context) {
     // var size = MediaQuery.of(context).size;
-    // print(aList.length);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              // formKey.currentState.validate();
               if (formKey.currentState.validate() && sharedProperly()) {
                 Map<String, String> data = {
                   "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
@@ -73,14 +65,6 @@ class _NewEntryLogState extends State<NewEntryLog> {
                   "shareBy": aList.map((e) => e.toString()).join(',')
                 };
                 editRecord ? model.editExpense(widget.index, data) : model.addExpense(data);
-                // model.addExpense({
-                //   "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
-                //   "person": _personEditor.text,
-                //   "item": _itemEditor.text,
-                //   "category": _categoryEditor.text,
-                //   "amount": _amountEditor.text,
-                //   "shareBy": aList.map((e) => e.toString()).join(',')
-                // });
                 widget.callback(0); //move to log page
                 Navigator.pop(context);
               }
@@ -138,23 +122,16 @@ class _NewEntryLogState extends State<NewEntryLog> {
                     children: <Widget>[
                       TextFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        // initialValue: data["item"],
                         decoration: const InputDecoration(
                           icon: Icon(Icons.shopping_cart_outlined),
                           hintText: 'Where did you spent the money?',
                           labelText: 'Item',
                         ),
-                        // onSaved: (String value) {},
-                        // onChanged: (val) {
-                        //   data["item"] = val;
-                        // },
                         controller: _itemEditor,
                         validator: (value) => value.isEmpty ? "Required filed *" : null,
                       ),
                       SizedBox(height: 15),
                       SelectFormField(
-                        type: SelectFormFieldType.dropdown, // or can be dialog
-                        // initialValue: data['person'],
                         icon: Icon(Icons.person_outline),
                         labelText: 'Spent By',
                         controller: _personEditor,
@@ -164,16 +141,10 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                   "label": e,
                                 })
                             .toList(),
-                        // onChanged: (val) {
-                        //   data["person"] = val;
-                        //   // print(data);
-                        // },
                         validator: (value) => value.isEmpty ? "Required filed *" : null,
-                        // onSaved: (val) => print(val),
                       ),
                       TextFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        // initialValue: data['amount'],
                         keyboardType: TextInputType.number,
                         controller: _amountEditor,
                         decoration: const InputDecoration(
@@ -181,19 +152,6 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           hintText: 'How much money is spent?',
                           labelText: "Amount",
                         ),
-
-                        onChanged: (val) {
-                          // print(_oldVal);
-                          // print(double.parse(val));
-                          // print(_oldVal != double.parse(val));
-                          // if (_oldVal != double.parse(val))
-                          //   setState(() {
-                          //     _oldVal = double.parse(val); // jsut don't reset the values;
-                          //     aList = List.filled(model.users.length, 0.0);
-                          //   });
-                          // print(data);
-                        },
-                        // onSaved: (String value) {},
                         validator: (val) {
                           if (val.isEmpty) return "Required filed *";
                           if (double.tryParse(val) == null) {
@@ -207,31 +165,15 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           controller: _dateEditor,
                           type: DateTimePickerType.date,
                           dateMask: 'd MMM, yyyy',
-                          // initialValue: data['date'],
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                           icon: Icon(Icons.event),
                           dateLabelText: 'Date',
-                          // onChanged: (val) {
-                          //   data["date"] = DateFormat('dd-MM-yyyy').format(
-                          //     DateFormat('yyyy-MM-dd').parse(val),
-                          //   );
-                          //   print(data["date"]);
-                          //   print("from chnage");
-                          // },
-                          // onFieldSubmitted: (value) {
-                          //   data["date"] = DateFormat('dd-MM-yyyy').format(
-                          //     DateFormat('yyyy-MM-dd').parse(value),
-                          //   );
-                          //   print(data["date"]);
-                          //   print("from submit");
-                          // },
                           validator: (value) => value.isEmpty ? "Required field *" : null),
                       SizedBox(height: 15),
                       SelectFormField(
                         key: ValueKey<int>(count2),
                         type: SelectFormFieldType.dropdown, // or can be dialog
-                        // initialValue: data['category'],
                         controller: _categoryEditor,
                         icon: Icon(Icons.category),
                         hintText: 'Category of the spend',
@@ -242,13 +184,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                   "label": e,
                                 })
                             .toList(),
-                        // onChanged: (val) {
-                        //   data["category"] = val;
-                        //   // print(data);
-                        // },
-                        // onSaved: (newValue) {
-                        //   _shareEditor = newValue;
-                        // },
+
                         validator: (value) => value.isEmpty ? "Required field *" : null,
                       ),
                       SizedBox(height: 15),
@@ -257,7 +193,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         onTap: () {
                           var val = double.parse(_amountEditor.text);
                           if (val != null) {
-                            if (aList.fold(0, (a, b) => a + b) != val) aList = List.filled(model.users.length, 0.0);
+                            if (aList.fold(0, (a, b) => a + b) != val) aList = List.filled(model.getUsers.length, 0.0);
 
                             Navigator.push(
                               context,
@@ -355,15 +291,6 @@ class _NewEntryLogState extends State<NewEntryLog> {
   getTheValue(val) {
     setState(() {
       aList = val;
-    });
-  }
-
-  resetPage() {
-    formKey.currentState.reset();
-    setState(() {
-      ++count1;
-      --count2;
-      // aList = List.filled(model.users.length, 0.0);
     });
   }
 

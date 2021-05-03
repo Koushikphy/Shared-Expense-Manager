@@ -99,7 +99,7 @@ class _StatsPageState extends State<StatsPage> {
     );
   }
 
-  Padding makeStatCrad(String cardType, MaterialColor color, IconData icon) {
+  Widget makeStatCrad(String cardType, MaterialColor color, IconData icon) {
     var size = MediaQuery.of(context).size;
     List<String> _users = widget.model.getUsers;
     widget.model.calculateShares();
@@ -160,11 +160,12 @@ class _StatsPageState extends State<StatsPage> {
                     return Column(
                       children: <Widget>[
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              width: (size.width - 40) * .6,
+                              // width: (size.width - 40) * .6,
                               child: Text(
-                                _users[index],
+                                " ${_users[index]}",
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: black,
@@ -173,10 +174,10 @@ class _StatsPageState extends State<StatsPage> {
                               ),
                             ),
                             Container(
-                              width: (size.width - 40) * .35,
+                              // width: (size.width - 40) * .35,
                               child: Text(
                                 // align these values to the decimal places
-                                "₹  ${thisStats[_users[index]].toStringAsFixed(2)}",
+                                "₹  ${thisStats[_users[index]].toStringAsFixed(2)}  ",
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: black,

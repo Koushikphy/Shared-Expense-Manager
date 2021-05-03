@@ -8,72 +8,71 @@ class ExpenseModel extends Model {
     setInitValues();
   }
 
-  List<String> categories = [];
+  List<String> _categories = [];
 
-  List<String> users = [];
+  List<String> _users = [];
 
-  Map<String, Map<String, double>> expenseStats = {};
+  Map<String, Map<String, double>> _expenseStats = {};
 
-  List<Map<String, String>> expenses = [];
+  List<Map<String, String>> _expenses = [];
 
-  Future<SharedPreferences> mySharedPref = SharedPreferences.getInstance();
-  List<Map<String, String>> get getExpenses => expenses;
-  List<String> get getCategories => categories;
-  List<String> get getUsers => users;
-  Map<String, Map<String, double>> get getexpenseStats => expenseStats;
+  // Future<SharedPreferences> mySharedPref = SharedPreferences.getInstance();
+  List<Map<String, String>> get getExpenses => _expenses;
+  List<String> get getCategories => _categories;
+  List<String> get getUsers => _users;
+  Map<String, Map<String, double>> get getexpenseStats => _expenseStats;
 
   void setUsers(List<String> userList) {
-    users = userList;
+    _users = userList;
     upDateUserData(true, false, false);
     notifyListeners();
   }
 
   void setCategories(List<String> categoryList) {
-    categories = categoryList;
+    _categories = categoryList;
     upDateUserData(false, true, false);
     notifyListeners();
   }
 
   void resetAll() {
-    categories = [];
-    users = [];
-    expenses = [];
+    _categories = [];
+    _users = [];
+    _expenses = [];
     notifyListeners();
   }
 
   void addExpense(Map<String, String> newExpenseEntry) {
-    expenses.insert(0, newExpenseEntry);
+    _expenses.insert(0, newExpenseEntry);
     upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void deleteExpense(int index) {
-    expenses.removeAt(index);
+    _expenses.removeAt(index);
     upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void editExpense(int index, Map<String, dynamic> updatedExpenseEntry) {
-    expenses[index] = updatedExpenseEntry;
+    _expenses[index] = updatedExpenseEntry;
     upDateUserData(false, false, true);
     notifyListeners();
   }
 
   void setInitValues() {
     if (kDebugMode) {
+      // in case of debug mode use test data.
       testData();
       return;
     }
     SharedPreferences.getInstance().then((prefs) {
-      users = prefs.getStringList('users') ?? [];
-      categories = prefs.getStringList('categories') ?? [];
-      // print(users);
-      // print(categories);
-      if (users.length != 0 && categories.length != 0) {
-        expenses =
+      _users = prefs.getStringList('users') ?? [];
+      _categories = prefs.getStringList('categories') ?? [];
+      if (_users.length != 0 && _categories.length != 0) {
+        _expenses =
             (json.decode(prefs.getString('expenses')) as Iterable).map((e) => Map<String, String>.from(e))?.toList();
       } else {
-        expenses = [];
+        _expenses = [];
       }
       notifyListeners();
     });
@@ -81,57 +80,56 @@ class ExpenseModel extends Model {
 
   void upDateUserData(bool u, bool c, bool e) async {
     SharedPreferences.getInstance().then((prefs) => {
-          e ? prefs.setString('expenses', json.encode(expenses)) : null,
-          u ? prefs.setStringList('users', users) : null,
-          c ? prefs.setStringList('categories', categories) : null
+          if (e) prefs.setString('expenses', json.encode(_expenses)),
+          if (u) prefs.setStringList('users', _users),
+          if (c) prefs.setStringList('categories', _categories)
         });
   }
 
-  void newDataLoaded(List<String> _uList, List<String> _cList, List<Map<String, String>> _exList) {
-    users = _uList;
-    categories = _cList;
-    expenses = _exList;
+  void newDataLoaded(List<String> uList, List<String> cList, List<Map<String, String>> exList) {
+    _users = uList;
+    _categories = cList;
+    _expenses = exList;
     upDateUserData(true, true, true);
     notifyListeners();
   }
 
   void calculateShares() {
     Map<String, Map<String, double>> tmpStats = {
-      "Total Spends": {for (var v in users) v: 0},
-      "Total Owe": {for (var v in users) v: 0},
-      "Net Owe": {for (var v in users) v: 0}
+      "Total Spends": {for (var v in _users) v: 0},
+      "Total Owe": {for (var v in _users) v: 0},
+      "Net Owe": {for (var v in _users) v: 0}
     };
 
-    expenses.forEach(
+    _expenses.forEach(
       (entry) {
         double amount = double.parse(entry["amount"]);
         List shareBy = entry["shareBy"].split(',').map((e) => double.parse(e)).toList();
         tmpStats["Total Spends"][entry["person"]] += amount;
 
-        for (int i = 0; i < users.length; i++) {
-          tmpStats["Total Owe"][users[i]] += shareBy[i];
-          tmpStats["Net Owe"][users[i]] += shareBy[i];
+        for (int i = 0; i < _users.length; i++) {
+          tmpStats["Total Owe"][_users[i]] += shareBy[i];
+          tmpStats["Net Owe"][_users[i]] += shareBy[i];
         }
 
         tmpStats["Net Owe"][entry["person"]] -= amount;
       },
     );
-
-    expenseStats = tmpStats;
+    _expenseStats = tmpStats;
   }
 
   testData() {
-    categories = ["Bills", "Food", "Misc"];
+    // used for debug
+    _categories = ["Bills", "Food", "Misc"];
+    _users = ["John", "Sam", "Will"];
 
-    users = ["John", "Sam", "Will"];
-
-    expenseStats = {
+    _expenseStats = {
       "Total Spends": {"John": 0, "Sam": 0, "Will": 0},
       "Total Owe": {"John": 0, "Sam": 0, "Will": 0},
       "Net Owe": {"John": 0, "Sam": 0, "Will": 0}
     };
 
-    expenses = [
+    _expenses = [
       {
         "date": "01-03-2021",
         "person": "Sam",

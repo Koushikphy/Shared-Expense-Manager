@@ -21,9 +21,8 @@ A Simeple app for managing group shared expenses. Just add users group and categ
 Built with [Flutter](https://flutter.dev/) framework, this app can be compiled for both Andoroid and iOS.
 
 ### Usage 
-* Download the app from the [release section](https://github.com/Koushikphy/Shared-Expense-Manager/releases)
-* Add list of users seperated by comma (,) in the setting page.
-* Add list of categories.
+* **Download** the app from the [release section](https://github.com/Koushikphy/Shared-Expense-Manager/releases).
+* Add list of users and categories seperated by comma (,) in the setting page.
 * Tap on the `+` button to add new expense record.
 * Check the Stats page for current expenses status.
 * Tap on individual record in the log page to edit/delete them.  

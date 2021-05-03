@@ -9,7 +9,6 @@ import 'package:shared_expenses/pages/profile_page.dart';
 import 'package:shared_expenses/pages/newentry_page.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:swipedetector/swipedetector.dart';
-// import 'package:shared_expenses/pages/chart/wip.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -37,10 +36,9 @@ class _RootAppState extends State<RootApp> {
           child: IndexedStack(
             index: pageIndex,
             children: <Widget>[
-              DailyPage(model1: model, callback: callback),
+              DailyPage(model: model, callback: callback),
               StatsPage(model: model, callback: callback),
               ProfilePage(model: model),
-              // NewEntryLog(model: model, callback: callback)
             ],
           ),
           onSwipeRight: () {
@@ -62,7 +60,6 @@ class _RootAppState extends State<RootApp> {
         icons: <IconData>[
           Ionicons.md_calendar,
           Ionicons.md_stats,
-          // Ionicons.md_pie,
           Ionicons.md_settings,
         ],
         activeIndex: pageIndex,
@@ -78,8 +75,6 @@ class _RootAppState extends State<RootApp> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // selectedTab(3);
-
             Navigator.push(
               context,
               MaterialPageRoute(
