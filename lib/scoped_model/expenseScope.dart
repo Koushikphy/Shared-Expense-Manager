@@ -60,7 +60,7 @@ class ExpenseModel extends Model {
   }
 
   void setInitValues() {
-    if (kDebugMode) {
+    if (!kReleaseMode) {
       // in case of debug mode use test data.
       testData();
       return;
@@ -153,6 +153,70 @@ class ExpenseModel extends Model {
         "category": "Food",
         "amount": "200",
         "shareBy": "0,200,0"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
+      },
+      {
+        "date": "02-03-2021",
+        "person": "John",
+        "item": "Rent",
+        "category": "Bills",
+        "amount": "66",
+        "shareBy": "22,22,22"
       },
       {
         "date": "02-03-2021",

@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.1"
+  animations:
+    dependency: "direct main"
+    description:
+      name: animations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   archive:
     dependency: transitive
     description:
@@ -385,13 +392,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  swipedetector:
-    dependency: "direct main"
-    description:
-      name: swipedetector
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   term_glyph:
     dependency: transitive
     description:

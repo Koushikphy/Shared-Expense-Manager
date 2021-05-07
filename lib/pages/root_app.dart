@@ -8,7 +8,8 @@ import 'package:shared_expenses/pages/stats_page.dart';
 import 'package:shared_expenses/pages/profile_page.dart';
 import 'package:shared_expenses/pages/newentry_page.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
-import 'package:swipedetector/swipedetector.dart';
+// import 'package:swipedetector/swipedetector.dart';
+import 'package:animations/animations.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class RootApp extends StatefulWidget {
 
 class _RootAppState extends State<RootApp> {
   int pageIndex = 0;
+  PageController controller = PageController(initialPage: 0);
 
   @override
   void initState() {
@@ -26,31 +28,26 @@ class _RootAppState extends State<RootApp> {
   @override
   void dispose() {
     super.dispose();
+    controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ScopedModelDescendant<ExpenseModel>(
-        builder: (context, child, model) => SwipeDetector(
-          child: IndexedStack(
-            index: pageIndex,
-            children: <Widget>[
-              DailyPage(model: model, callback: callback),
-              StatsPage(model: model, callback: callback),
-              ProfilePage(model: model),
-            ],
-          ),
-          onSwipeRight: () {
+        builder: (context, child, model) => PageView(
+          controller: controller,
+          children: [
+            DailyPage(model: model, callback: callback),
+            StatsPage(model: model, callback: callback),
+            ProfilePage(model: model),
+          ],
+          onPageChanged: (val) {
             setState(() {
-              if (pageIndex > 0) pageIndex--;
+              pageIndex = val;
             });
           },
-          onSwipeLeft: () {
-            setState(() {
-              if (pageIndex < 2) pageIndex++;
-            });
-          },
+          physics: ClampingScrollPhysics(),
         ),
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
@@ -63,43 +60,48 @@ class _RootAppState extends State<RootApp> {
           Ionicons.md_settings,
         ],
         activeIndex: pageIndex,
-        // gapLocation: GapLocation.end,
         notchSmoothness: NotchSmoothness.softEdge,
-        // leftCornerRadius: 10,
         iconSize: 30,
-        // rightCornerRadius: 10,
         onTap: (index) {
-          selectedTab(index);
+          setState(() {
+            pageIndex = index;
+            controller.animateToPage(
+              pageIndex,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          });
         },
         //other params
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NewEntryLog(
-                  callback: callback,
-                  context: context,
-                ),
+      floatingActionButton: OpenContainer(
+        transitionType: ContainerTransitionType.fadeThrough,
+        openBuilder: (BuildContext context, VoidCallback _) {
+          return NewEntryLog(callback: callback, context: context);
+        },
+        closedElevation: 5.0,
+        openElevation: 0,
+        closedShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(50),
+          ),
+        ),
+        closedColor: Colors.pink,
+        closedBuilder: (BuildContext context, VoidCallback openContainer) {
+          return SizedBox(
+            height: 50,
+            width: 50,
+            child: Center(
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.onSecondary,
               ),
-            );
-          },
-          child: Icon(
-            Icons.add,
-            size: 25,
-          ),
-          backgroundColor: Colors.pink
-          //params
-          ),
+            ),
+          );
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
-  }
-
-  selectedTab(index) {
-    setState(() {
-      pageIndex = index;
-    });
   }
 
   callback(int index) {

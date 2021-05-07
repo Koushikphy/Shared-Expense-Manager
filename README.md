@@ -56,6 +56,7 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 11. - [x] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [x] Add custom icon for production app.
 13. - [x] App signing for distribution.
+11. - [ ] Pages to add users and categories
 14. - [ ] Sort the data according to time at modification.
 13. - [x] Mocks for presentation 
 13. - [x] First sharable production build.
