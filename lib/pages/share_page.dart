@@ -20,6 +20,14 @@ class _SharePageState extends State<SharePage> {
   bool showError = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    _controler.forEach((element) {
+      element.dispose();
+    });
+  }
+
+  @override
   void initState() {
     super.initState();
     _initAmount = widget.initValue;

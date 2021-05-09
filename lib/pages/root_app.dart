@@ -8,7 +8,6 @@ import 'package:shared_expenses/pages/stats_page.dart';
 import 'package:shared_expenses/pages/profile_page.dart';
 import 'package:shared_expenses/pages/newentry_page.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
-// import 'package:swipedetector/swipedetector.dart';
 import 'package:animations/animations.dart';
 
 class RootApp extends StatefulWidget {
@@ -19,11 +18,6 @@ class RootApp extends StatefulWidget {
 class _RootAppState extends State<RootApp> {
   int pageIndex = 0;
   PageController controller = PageController(initialPage: 0);
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -72,33 +66,25 @@ class _RootAppState extends State<RootApp> {
             );
           });
         },
-        //other params
       ),
       floatingActionButton: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
-        openBuilder: (BuildContext context, VoidCallback _) {
-          return NewEntryLog(callback: callback, context: context);
-        },
+        openBuilder: (BuildContext context, _) => NewEntryLog(callback: callback, context: context),
         closedElevation: 5.0,
         openElevation: 0,
-        closedShape: const RoundedRectangleBorder(
+        closedShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(50),
           ),
         ),
         closedColor: Colors.pink,
-        closedBuilder: (BuildContext context, VoidCallback openContainer) {
-          return SizedBox(
-            height: 50,
-            width: 50,
-            child: Center(
-              child: Icon(
-                Icons.add,
-                color: Theme.of(context).colorScheme.onSecondary,
-              ),
-            ),
-          );
-        },
+        closedBuilder: (_, __) => SizedBox(
+          height: 50,
+          width: 50,
+          child: Center(
+            child: Icon(Icons.add, color: Colors.white),
+          ),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );

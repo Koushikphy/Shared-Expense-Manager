@@ -23,6 +23,14 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController userControler = TextEditingController();
   TextEditingController categoryControler = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    userControler.dispose();
+    categoryControler.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     userControler.text = widget.model.getUsers.join(',');
@@ -30,17 +38,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: grey.withOpacity(0.05),
-        body: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 56, //56 height of the bottom navigation bar
-            child: getBody(),
-          ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height - 56, //56 height of the bottom navigation bar
+          child: getBody(),
         ));
   }
 
   Widget getBody() {
-    // var size = MediaQuery.of(context).size;
     return Column(
       children: <Widget>[
         Container(
@@ -63,51 +68,41 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Padding(
             padding: const EdgeInsets.only(top: 50, right: 20, left: 20, bottom: 25),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                // Text(
-                //   "Preferences",
-                //   style: TextStyle(
-                //       fontSize: 21,
-                //       fontWeight: FontWeight.bold,
-                //       color: Colors.white),
-                // ),
-              ],
+              children: <Widget>[],
             ),
           ),
         ),
         SizedBox(
           height: 30,
         ),
-        Container(
-          child: Column(
-            children: [
-              Image.asset(
-                "assets/images/budget.png",
-                height: 100,
-                fit: BoxFit.contain,
+        Column(
+          children: [
+            Image.asset(
+              "assets/images/budget.png",
+              height: 100,
+              fit: BoxFit.contain,
+            ),
+            SizedBox(
+              height: 13,
+            ),
+            Text(
+              "Shared Expense Manager",
+              style: TextStyle(
+                fontSize: 25,
+                color: myColors[2][0],
               ),
-              SizedBox(
-                height: 13,
-              ),
-              Text(
-                "Shared Expense Manager",
-                style: TextStyle(
-                  fontSize: 25, color: myColors[2][0],
-                ),
-              ),
-              Text(
-                "v 0.1.0",
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
+            ),
+            Text(
+              "v 0.1.0",
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
 
-                  //
-                ),
+                //
               ),
-              SizedBox(height: 13),
-            ],
-          ),
+            ),
+            SizedBox(height: 13),
+          ],
         ),
         Padding(
           padding: EdgeInsets.all(20),
@@ -132,7 +127,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 indent: 30,
                 thickness: 1.0,
                 height: 15,
-                // color: color.shade50,
               ),
               SizedBox(height: 10),
               InkWell(
@@ -145,7 +139,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       "Categories",
                       style: TextStyle(
                         fontSize: 21,
-                        // fontWeight: FontWeight.bold,
                       ),
                     )
                   ],
@@ -155,7 +148,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 indent: 30,
                 thickness: 1.0,
                 height: 15,
-                // color: color.shade50,
               ),
               SizedBox(height: 10),
               InkWell(
@@ -168,7 +160,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       "Reset Data",
                       style: TextStyle(
                         fontSize: 21,
-                        // fontWeight: FontWeight.bold,
                       ),
                     )
                   ],
@@ -178,13 +169,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 indent: 30,
                 thickness: 1.0,
                 height: 15,
-                // color: color.shade50,
               ),
               SizedBox(
                 height: 21,
               ),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
@@ -206,7 +195,6 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         Expanded(child: Container()),
         Column(
-          // mainAxisAlignment: MainAxisAlignment.end,
           children: [
             RichText(
               text: TextSpan(
@@ -233,6 +221,8 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
   }
+
+  
 
   var _url = 'https://github.com/Koushikphy/Shared-Expense-Manager';
   void _launchURL() async {
@@ -278,7 +268,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 } else {
                   widget.model.setUsers(uList);
                 }
-
               },
             ),
             TextButton(

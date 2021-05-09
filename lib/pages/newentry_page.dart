@@ -26,9 +26,20 @@ class _NewEntryLogState extends State<NewEntryLog> {
   TextEditingController _categoryEditor = TextEditingController();
   ExpenseModel model;
   bool showError = false;
-  int count1 = 1;
-  int count2 = 0;
+  // int count1 = 1;
+  // int count2 = 0;
   bool editRecord;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _itemEditor.dispose();
+    _personEditor.dispose();
+    _amountEditor.dispose();
+    _dateEditor.dispose();
+    _categoryEditor.dispose();
+  }
+
   @override
   void initState() {
     model = ScopedModel.of(widget.context);
@@ -91,7 +102,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
         ],
       ),
       body: SingleChildScrollView(
-        key: ValueKey<int>(count1),
+        // key: ValueKey<int>(count1),
         child: (model.getUsers.length == 0 || model.getCategories.length == 0)
             ? Container(
                 width: double.infinity,
@@ -172,7 +183,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           validator: (value) => value.isEmpty ? "Required field *" : null),
                       SizedBox(height: 15),
                       SelectFormField(
-                        key: ValueKey<int>(count2),
+                        // key: ValueKey<int>(count2),
                         type: SelectFormFieldType.dropdown, // or can be dialog
                         controller: _categoryEditor,
                         icon: Icon(Icons.category),

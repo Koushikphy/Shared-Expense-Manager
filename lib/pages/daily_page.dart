@@ -49,41 +49,34 @@ class DailyPage extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.all(13),
-              children: <Widget>[
-                model.getExpenses.length == 0
-                    ? noExpenseDefault(context)
-                    : Column(
-                        children: List.generate(
-                          _expenses.length,
-                          (i) {
-                            return OpenContainer(
-                              transitionType: ContainerTransitionType.fadeThrough,
-                              closedElevation: 0,
-                              openElevation: 0,
-                              middleColor: Colors.transparent,
-                              openColor: Colors.transparent,
-                              closedColor: Colors.transparent,
-                              closedBuilder: (BuildContext context, VoidCallback openContainer) {
-                                return makeRecordTile(size, _expenses[i]);
-                              },
-                              openBuilder: (BuildContext context, VoidCallback openContainer) {
-                                return NewEntryLog(
-                                  callback: callback,
-                                  context: context,
-                                  index: i,
-                                );
-                              },
-                            );
-                          },
+          model.getExpenses.length == 0
+              ? noExpenseDefault(context)
+              : Expanded(
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.all(13),
+                    children: List.generate(
+                      _expenses.length,
+                      (i) => OpenContainer(
+                        transitionType: ContainerTransitionType.fadeThrough,
+                        closedElevation: 0,
+                        openElevation: 0,
+                        middleColor: Colors.transparent,
+                        openColor: Colors.transparent,
+                        closedColor: Colors.transparent,
+                        closedBuilder: (_, __) => makeRecordTile(
+                          size,
+                          _expenses[i],
+                        ),
+                        openBuilder: (_, __) => NewEntryLog(
+                          callback: callback,
+                          context: context,
+                          index: i,
                         ),
                       ),
-              ],
-            ),
-          ),
+                    ),
+                  ),
+                ),
         ],
       ),
     );
@@ -92,6 +85,9 @@ class DailyPage extends StatelessWidget {
   Column noExpenseDefault(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: 30,
+        ),
         Text(
           "No expense entries found",
           style: TextStyle(fontSize: 21),
@@ -102,7 +98,6 @@ class DailyPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                // builder: (context) => DetailLog(index: i, model: model),
                 builder: (context) => NewEntryLog(
                   callback: callback,
                   context: context,
@@ -122,7 +117,6 @@ class DailyPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
@@ -145,7 +139,6 @@ class DailyPage extends StatelessWidget {
               ],
             ),
             Column(
-              // mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Text(
