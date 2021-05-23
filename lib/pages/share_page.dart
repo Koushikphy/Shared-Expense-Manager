@@ -5,7 +5,7 @@ class SharePage extends StatefulWidget {
   final double value;
   final List<String> users;
   final Function callback;
-  final List<double> initValue;
+  final Map<String, String> initValue;
   SharePage({Key key, @required this.value, @required this.users, @required this.initValue, @required this.callback})
       : super(key: key);
 
@@ -18,6 +18,7 @@ class _SharePageState extends State<SharePage> {
   List<double> _initAmount;
   List<TextEditingController> _controler;
   bool showError = false;
+  List<String> _users;
 
   @override
   void dispose() {
@@ -30,9 +31,10 @@ class _SharePageState extends State<SharePage> {
   @override
   void initState() {
     super.initState();
-    _initAmount = widget.initValue;
+    _users = widget.users;
+    _initAmount = _users.map((e) => double.parse(widget.initValue[e])).toList();
     _checkList = _initAmount.map((e) => e != 0).toList();
-    _controler = List.generate(widget.users.length, (i) => TextEditingController(text: _initAmount[i].toString()));
+    _controler = List.generate(_users.length, (i) => TextEditingController(text: _initAmount[i].toString()));
   }
 
   @override
@@ -46,7 +48,7 @@ class _SharePageState extends State<SharePage> {
           IconButton(
             onPressed: () {
               if (isSumEqual()) {
-                widget.callback(_controler.map((e) => double.parse(e.text)).toList());
+                widget.callback({for (int i = 0; i < _users.length; i++) _users[i]: _controler[i].text});
                 Navigator.pop(context);
               } else {
                 setState(() {
@@ -78,7 +80,7 @@ class _SharePageState extends State<SharePage> {
             ),
             Column(
               children: List.generate(
-                widget.users.length,
+                _users.length,
                 (index) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -92,24 +94,24 @@ class _SharePageState extends State<SharePage> {
 
                             double amount =
                                 round2(widget.value / _checkList.where((element) => element == true).length);
-                            for (int i = 0; i < widget.users.length; i++) _initAmount[i] = _checkList[i] ? amount : 0.0;
+                            for (int i = 0; i < _users.length; i++) _initAmount[i] = _checkList[i] ? amount : 0.0;
 
                             double diff = widget.value - _initAmount.fold(0, (a, b) => a + b);
                             if (diff != 0)
-                              for (int i = 0; i < widget.users.length; i++) {
+                              for (int i = 0; i < _users.length; i++) {
                                 if (_checkList[i]) {
                                   _initAmount[i] += diff;
                                   break;
                                 }
                               }
-                            for (int i = 0; i < widget.users.length; i++)
+                            for (int i = 0; i < _users.length; i++)
                               _controler[i].text = _initAmount[i].toStringAsFixed(2);
                             setState(() {});
                           },
                         ),
                       ),
                       Container(
-                        child: Text(widget.users[index], style: TextStyle(fontSize: 18)),
+                        child: Text(_users[index], style: TextStyle(fontSize: 18)),
                         width: (MediaQuery.of(context).size.width - 20) * .4,
                       ),
                       Text("₹ ", style: TextStyle(fontSize: 16)),

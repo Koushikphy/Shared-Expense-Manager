@@ -12,15 +12,15 @@ class ExpenseModel extends Model {
 
   List<String> _users = [];
 
-  Map<String, Map<String, double>> _expenseStats = {};
+  // Map<String, Map<String, double>> _expenseStats = {};
 
-  List<Map<String, String>> _expenses = [];
+  List<Map<String, dynamic>> _expenses = [];
 
   // Future<SharedPreferences> mySharedPref = SharedPreferences.getInstance();
-  List<Map<String, String>> get getExpenses => _expenses;
+  List<Map<String, dynamic>> get getExpenses => _expenses;
   List<String> get getCategories => _categories;
   List<String> get getUsers => _users;
-  Map<String, Map<String, double>> get getexpenseStats => _expenseStats;
+  // Map<String, Map<String, double>> get getexpenseStats => _expenseStats;
 
   void setUsers(List<String> userList) {
     _users = userList;
@@ -41,7 +41,7 @@ class ExpenseModel extends Model {
     notifyListeners();
   }
 
-  void addExpense(Map<String, String> newExpenseEntry) {
+  void addExpense(Map<String, dynamic> newExpenseEntry) {
     _expenses.insert(0, newExpenseEntry);
     upDateUserData(false, false, true);
     notifyListeners();
@@ -70,7 +70,7 @@ class ExpenseModel extends Model {
       _categories = prefs.getStringList('categories') ?? [];
       if (_users.length != 0 && _categories.length != 0) {
         _expenses =
-            (json.decode(prefs.getString('expenses')) as Iterable).map((e) => Map<String, String>.from(e))?.toList();
+            (json.decode(prefs.getString('expenses')) as Iterable).map((e) => Map<String, dynamic>.from(e))?.toList();
       } else {
         _expenses = [];
       }
@@ -86,7 +86,7 @@ class ExpenseModel extends Model {
         });
   }
 
-  void newDataLoaded(List<String> uList, List<String> cList, List<Map<String, String>> exList) {
+  void newDataLoaded(List<String> uList, List<String> cList, List<Map<String, dynamic>> exList) {
     _users = uList;
     _categories = cList;
     _expenses = exList;
@@ -94,7 +94,7 @@ class ExpenseModel extends Model {
     notifyListeners();
   }
 
-  void calculateShares() {
+  Map<String, Map<String, double>> calculateShares() {
     Map<String, Map<String, double>> tmpStats = {
       "Total Spends": {for (var v in _users) v: 0},
       "Total Owe": {for (var v in _users) v: 0},
@@ -104,30 +104,24 @@ class ExpenseModel extends Model {
     _expenses.forEach(
       (entry) {
         double amount = double.parse(entry["amount"]);
-        List shareBy = entry["shareBy"].split(',').map((e) => double.parse(e)).toList();
         tmpStats["Total Spends"][entry["person"]] += amount;
-
-        for (int i = 0; i < _users.length; i++) {
-          tmpStats["Total Owe"][_users[i]] += shareBy[i];
-          tmpStats["Net Owe"][_users[i]] += shareBy[i];
+        for (MapEntry val in entry["shareBy"].entries) {
+          // do it with map.foreach
+          tmpStats["Total Owe"][val.key] += double.parse(val.value);
+          tmpStats["Net Owe"][val.key] += double.parse(val.value);
         }
-
-        tmpStats["Net Owe"][entry["person"]] -= amount;
       },
     );
-    _expenseStats = tmpStats;
+    _users.forEach((u) {
+      tmpStats["Net Owe"][u] = tmpStats["Total Owe"][u] - tmpStats["Total Spends"][u];
+    });
+    return tmpStats;
   }
 
   testData() {
     // used for debug
     _categories = ["Bills", "Food", "Misc"];
     _users = ["John", "Sam", "Will"];
-
-    _expenseStats = {
-      "Total Spends": {"John": 0, "Sam": 0, "Will": 0},
-      "Total Owe": {"John": 0, "Sam": 0, "Will": 0},
-      "Net Owe": {"John": 0, "Sam": 0, "Will": 0}
-    };
 
     _expenses = [
       {
@@ -136,7 +130,7 @@ class ExpenseModel extends Model {
         "item": "Groceries",
         "category": "Food",
         "amount": "300",
-        "shareBy": "100,100,100"
+        "shareBy": {"Sam": "100", "Will": "100", "John": "100"}
       },
       {
         "date": "01-03-2021",
@@ -144,7 +138,7 @@ class ExpenseModel extends Model {
         "item": "Water",
         "category": "Food",
         "amount": "210",
-        "shareBy": "210,0,0"
+        "shareBy": {"Sam": "210"}
       },
       {
         "date": "02-03-2021",
@@ -152,7 +146,7 @@ class ExpenseModel extends Model {
         "item": "Misc",
         "category": "Food",
         "amount": "200",
-        "shareBy": "0,200,0"
+        "shareBy": {"Will": "200"}
       },
       {
         "date": "02-03-2021",
@@ -160,7 +154,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -168,7 +162,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -176,7 +170,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -184,7 +178,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -192,7 +186,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -200,7 +194,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -208,7 +202,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -216,7 +210,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
       {
         "date": "02-03-2021",
@@ -224,7 +218,7 @@ class ExpenseModel extends Model {
         "item": "Rent",
         "category": "Bills",
         "amount": "66",
-        "shareBy": "22,22,22"
+        "shareBy": {"Sam": "22", "Will": "22", "John": "22"}
       },
     ];
   }

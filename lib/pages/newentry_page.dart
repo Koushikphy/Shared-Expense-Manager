@@ -18,7 +18,7 @@ class NewEntryLog extends StatefulWidget {
 
 class _NewEntryLogState extends State<NewEntryLog> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List<double> aList;
+  Map<String, String> aList;
   TextEditingController _itemEditor = TextEditingController();
   TextEditingController _personEditor = TextEditingController();
   TextEditingController _amountEditor = TextEditingController();
@@ -26,8 +26,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
   TextEditingController _categoryEditor = TextEditingController();
   ExpenseModel model;
   bool showError = false;
-  // int count1 = 1;
-  // int count2 = 0;
+
   bool editRecord;
 
   @override
@@ -44,16 +43,25 @@ class _NewEntryLogState extends State<NewEntryLog> {
   void initState() {
     model = ScopedModel.of(widget.context);
     super.initState();
-    aList = List.filled(model.getUsers.length, 0.0);
     editRecord = widget.index != -999;
     if (editRecord) {
-      Map<String, String> data = {...model.getExpenses[widget.index]};
+      Map<String, dynamic> data = {...model.getExpenses[widget.index]};
       _itemEditor.text = data['item'];
       _personEditor.text = data['person'];
       _amountEditor.text = data['amount'];
       _dateEditor.text = DateFormat("dd-MM-yyyy").parse(data['date']).toString();
       _categoryEditor.text = data['category'];
-      aList = model.getExpenses[widget.index]["shareBy"].split(',').map((e) => double.parse(e)).toList();
+      aList = model.getExpenses[widget.index]["shareBy"]; //.split(',').map((e) => double.parse(e)).toList();
+      // fill users if not present
+      if (model.getUsers.length != aList.length) {
+        for (String u in model.getUsers) {
+          if (!aList.containsKey(u)) {
+            aList[u] = "0.00";
+          }
+        }
+      }
+    } else {
+      aList = {for (var u in model.getUsers) u: "0.00"};
     }
   }
 
@@ -67,13 +75,13 @@ class _NewEntryLogState extends State<NewEntryLog> {
           IconButton(
             onPressed: () {
               if (formKey.currentState.validate() && sharedProperly()) {
-                Map<String, String> data = {
+                Map<String, dynamic> data = {
                   "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
                   "person": _personEditor.text,
                   "item": _itemEditor.text,
                   "category": _categoryEditor.text,
                   "amount": _amountEditor.text,
-                  "shareBy": aList.map((e) => e.toString()).join(',')
+                  "shareBy": aList //.map((e) => e.toString()).join(',')
                 };
                 editRecord ? model.editExpense(widget.index, data) : model.addExpense(data);
                 widget.callback(0); //move to log page
@@ -202,9 +210,13 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       SizedBox(height: 15),
                       InkWell(
                         onTap: () {
-                          var val = double.parse(_amountEditor.text);
+                          double val = double.parse(_amountEditor.text);
                           if (val != null) {
-                            if (aList.fold(0, (a, b) => a + b) != val) aList = List.filled(model.getUsers.length, 0.0);
+                            double summed = 0.0;
+                            for (String v in aList.values) {
+                              summed += double.parse(v);
+                            }
+                            if (summed != val) aList = {for (var u in model.getUsers) u: "0.00"};
 
                             Navigator.push(
                               context,
@@ -244,36 +256,33 @@ class _NewEntryLogState extends State<NewEntryLog> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Column(
-                                  children: List.generate(
-                                    aList.length,
-                                    (index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(right: 10, bottom: 5),
-                                        child: Text(
-                                          model.getUsers[index],
-                                          style: TextStyle(fontSize: 15),
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: aList.entries
+                                      .map(
+                                        (e) => Padding(
+                                          padding: const EdgeInsets.only(right: 15, bottom: 5),
+                                          child: Text(
+                                            e.key,
+                                            style: TextStyle(fontSize: 15),
+                                          ),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                      )
+                                      .toList(),
                                 ),
                                 Column(
-                                  children: List.generate(
-                                    aList.length,
-                                    (index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(left: 10, bottom: 5),
-                                        child: Text(aList[index].toStringAsFixed(2), style: TextStyle(fontSize: 15)),
-                                      );
-                                    },
-                                  ),
-                                )
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: aList.entries
+                                      .map((e) => Padding(
+                                            padding: const EdgeInsets.only(left: 15, bottom: 5),
+                                            child: Text(e.value, style: TextStyle(fontSize: 15)),
+                                          ))
+                                      .toList(),
+                                ),
                               ],
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 30, top: 8),
                               child: Divider(
-                                // thickness: 2,
                                 indent: 2,
                                 color: Colors.black,
                               ),
@@ -299,14 +308,18 @@ class _NewEntryLogState extends State<NewEntryLog> {
     );
   }
 
-  getTheValue(val) {
+  getTheValue(Map<String, String> val) {
     setState(() {
       aList = val;
     });
   }
 
   sharedProperly() {
-    double summed = aList.fold(0, (a, b) => a + b);
+    double summed = 0;
+    for (String v in aList.values) {
+      summed += double.parse(v);
+    }
+    // aList.fold(0, (a, b) => a + b);
     var val = double.parse(_amountEditor.text);
     if (val == null) return false;
     if (summed == val) {

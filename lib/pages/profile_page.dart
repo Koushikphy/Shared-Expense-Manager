@@ -8,9 +8,10 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 // import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:shared_expenses/pages/addUser_page.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import 'package:animations/animations.dart';
 
 class ProfilePage extends StatefulWidget {
   final ExpenseModel model;
@@ -108,9 +109,14 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              InkWell(
-                onTap: showUserDialog,
-                child: Row(
+              OpenContainer(
+                transitionType: ContainerTransitionType.fadeThrough,
+                closedElevation: 0,
+                openElevation: 0,
+                middleColor: Colors.transparent,
+                openColor: Colors.transparent,
+                closedColor: Colors.transparent,
+                closedBuilder: (_, __) => Row(
                   children: [
                     Icon(Icons.person_outline),
                     SizedBox(width: 10),
@@ -122,6 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     )
                   ],
                 ),
+                openBuilder: (_, __) => AddUserCat(context: context, type: 0),
               ),
               Divider(
                 indent: 30,
@@ -129,11 +136,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 15,
               ),
               SizedBox(height: 10),
-              InkWell(
-                onTap: showCategoryDialog,
-                child: Row(
+              OpenContainer(
+                transitionType: ContainerTransitionType.fadeThrough,
+                closedElevation: 0,
+                openElevation: 0,
+                middleColor: Colors.transparent,
+                openColor: Colors.transparent,
+                closedColor: Colors.transparent,
+                closedBuilder: (_, __) => Row(
                   children: [
-                    Icon(Icons.category_outlined),
+                    Icon(Icons.person_outline),
                     SizedBox(width: 10),
                     Text(
                       "Categories",
@@ -143,6 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     )
                   ],
                 ),
+                openBuilder: (_, __) => AddUserCat(context: context, type: 1),
               ),
               Divider(
                 indent: 30,
@@ -222,8 +235,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  
-
   var _url = 'https://github.com/Koushikphy/Shared-Expense-Manager';
   void _launchURL() async {
     await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
@@ -239,91 +250,91 @@ class _ProfilePageState extends State<ProfilePage> {
     return false;
   }
 
-  void showUserDialog() {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Clear Expense Entries'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Enter user list'),
-                TextFormField(
-                  controller: userControler,
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                List<String> uList = userControler.text.toString().split(',').map((e) => e.trim()).toList();
+  // void showUserDialog() {
+  //   showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false, // user must tap button!
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Clear Expense Entries'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('Enter user list'),
+  //               TextFormField(
+  //                 controller: userControler,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text('OK'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //               List<String> uList = userControler.text.toString().split(',').map((e) => e.trim()).toList();
 
-                if (widget.model.getUsers.length != 0 && notContains(widget.model.getUsers, uList)) {
-                  showWarningDialog("users");
-                } else {
-                  widget.model.setUsers(uList);
-                }
-              },
-            ),
-            TextButton(
-              child: Text('Cancle'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  //               if (widget.model.getUsers.length != 0 && notContains(widget.model.getUsers, uList)) {
+  //                 showWarningDialog("users");
+  //               } else {
+  //                 widget.model.setUsers(uList);
+  //               }
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text('Cancle'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  void showCategoryDialog() {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Clear Expense Entries'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Enter category list'),
-                TextFormField(
-                  controller: categoryControler,
-                )
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                List<String> cList = categoryControler.text.toString().split(',').map((e) => e.trim()).toList();
+  // void showCategoryDialog() {
+  //   showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false, // user must tap button!
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Clear Expense Entries'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('Enter category list'),
+  //               TextFormField(
+  //                 controller: categoryControler,
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text('OK'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //               List<String> cList = categoryControler.text.toString().split(',').map((e) => e.trim()).toList();
 
-                if (widget.model.getCategories.length != 0 && notContains(widget.model.getCategories, cList)) {
-                  showWarningDialog("users");
-                } else {
-                  widget.model.setCategories(cList);
-                }
-              },
-            ),
-            TextButton(
-              child: Text('Cancle'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  //               if (widget.model.getCategories.length != 0 && notContains(widget.model.getCategories, cList)) {
+  //                 showWarningDialog("users");
+  //               } else {
+  //                 widget.model.setCategories(cList);
+  //               }
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text('Cancle'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void showResetDialog() {
     showDialog<void>(
@@ -393,33 +404,33 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void showWarningDialog(String param) {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Alert !'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Can not modify existing $param'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                widget.model.resetAll();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void showWarningDialog(String param) {
+  //   showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false, // user must tap button!
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Alert !'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('Can not modify existing $param'),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text('OK'),
+  //             onPressed: () {
+  //               widget.model.resetAll();
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void loadUserData() async {
     FilePickerResult result = await FilePicker.platform.pickFiles();

@@ -12,7 +12,7 @@ class DailyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    List<Map<String, String>> _expenses = model.getExpenses;
+    List<Map<String, dynamic>> _expenses = model.getExpenses;
 
     return Scaffold(
       // backgroundColor: grey.withOpacity(0.05),
@@ -110,7 +110,7 @@ class DailyPage extends StatelessWidget {
     );
   }
 
-  Column makeRecordTile(Size size, Map<String, String> record) {
+  Column makeRecordTile(Size size, Map<String, dynamic> record) {
     return Column(
       children: <Widget>[
         Row(
