@@ -94,33 +94,36 @@ class _StatsPageState extends State<StatsPage> {
           child: SingleChildScrollView(
             child: Screenshot(
               controller: _screenShotController,
-              child: Column(
-                children: <Widget>[
-                  (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
-                      ? Column(
-                          children: [
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Text(
-                              "No users added",
-                              style: TextStyle(fontSize: 21),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  widget.callback(2);
-                                },
-                                child: Text("Go to settings"))
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            makeStatCrad("Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
-                            makeStatCrad("Total Owe", Colors.green, MaterialIcons.account_balance),
-                            makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
-                          ],
-                        )
-                ],
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: <Widget>[
+                    (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text(
+                                "No users added",
+                                style: TextStyle(fontSize: 21),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    widget.callback(2);
+                                  },
+                                  child: Text("Go to settings"))
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              makeStatCrad("Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
+                              makeStatCrad("Total Owe", Colors.green, MaterialIcons.account_balance),
+                              makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
+                            ],
+                          )
+                  ],
+                ),
               ),
             ),
           ),
