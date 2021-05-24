@@ -51,7 +51,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
       _amountEditor.text = data['amount'];
       _dateEditor.text = DateFormat("dd-MM-yyyy").parse(data['date']).toString();
       _categoryEditor.text = data['category'];
-      aList = model.getExpenses[widget.index]["shareBy"]; //.split(',').map((e) => double.parse(e)).toList();
+      aList = Map<String, String>.from(
+          model.getExpenses[widget.index]["shareBy"]); //.split(',').map((e) => double.parse(e)).toList();
       // fill users if not present
       if (model.getUsers.length != aList.length) {
         for (String u in model.getUsers) {

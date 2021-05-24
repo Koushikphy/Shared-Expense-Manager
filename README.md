@@ -62,6 +62,9 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 14. - [ ] Introduce search functionality to the log page.
 15. - [ ] Separate data into months and a provide a option to set it.
 15. - [ ] Firebase authentication to sync between multiple devices.  
+* - [ ] Bring the share page in the main entry page.
+* - [ ] Add new entry without leaving the page.
+* - [ ] Share image white background with top bar
 </details>  
 
 

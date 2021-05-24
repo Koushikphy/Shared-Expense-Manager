@@ -96,6 +96,7 @@ class _AddUserCatState extends State<AddUserCat> {
                 Navigator.of(context).pop();
                 setState(() {
                   _userList.add(userControler.text);
+                  userControler.clear();
                 });
               },
             ),

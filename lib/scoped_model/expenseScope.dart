@@ -7,7 +7,7 @@ class ExpenseModel extends Model {
   ExpenseModel() {
     setInitValues();
   }
-
+  // convert this to a object approach.
   List<String> _categories = [];
 
   List<String> _users = [];

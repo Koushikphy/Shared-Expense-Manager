@@ -445,7 +445,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     List<String> _cList = (data["categories"] as List).map((e) => e as String).toList();
 
-    List<Map<String, String>> _exList = (data["expenses"] as List).map((e) => Map<String, String>.from(e)).toList();
+    List<Map<String, dynamic>> _exList = (data["expenses"] as List).map((e) => Map<String, dynamic>.from(e)).toList();
 
     widget.model.newDataLoaded(_uList, _cList, _exList);
   }
