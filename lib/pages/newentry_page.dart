@@ -182,6 +182,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       ),
                       SizedBox(height: 15),
                       DateTimePicker(
+                          
                           controller: _dateEditor,
                           type: DateTimePickerType.date,
                           dateMask: 'd MMM, yyyy',

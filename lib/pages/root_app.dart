@@ -94,6 +94,11 @@ class _RootAppState extends State<RootApp> {
     setState(() {
       index ??= 2;
       pageIndex = index;
+      controller.animateToPage(
+        pageIndex,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
     });
   }
 }

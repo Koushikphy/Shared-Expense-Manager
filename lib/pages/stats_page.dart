@@ -6,6 +6,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:select_form_field/select_form_field.dart';
 
 class StatsPage extends StatefulWidget {
   final ExpenseModel model;
@@ -38,6 +39,22 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   Widget getBody() {
+    Map<String, String> months = {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December",
+      "13": "All"
+    };
+
     return Column(
       children: [
         Container(
@@ -90,46 +107,69 @@ class _StatsPageState extends State<StatsPage> {
             ),
           ),
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Screenshot(
-              controller: _screenShotController,
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
-                        ? Column(
+        (widget.model.getUsers.length == 0 || widget.model.getCategories.length == 0)
+            ? Column(
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    widget.model.getUsers.length == 0 ? "No users added" : "No categories added",
+                    style: TextStyle(fontSize: 21),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        widget.callback(2);
+                      },
+                      child: Text("Go to settings"))
+                ],
+              )
+            : Expanded(
+                child: SingleChildScrollView(
+                  child: Screenshot(
+                    controller: _screenShotController,
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: <Widget>[
+                          Column(
                             children: [
-                              SizedBox(
-                                height: 30,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                child: SelectFormField(
+                                  initialValue: widget.model.getCurrentMonth,
+                                  labelText: 'Select Month',
+                                  style: TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  items: [
+                                    for (MapEntry e in months.entries) {'value': e.key, 'label': e.value}
+                                  ],
+                                  validator: (value) => value.isEmpty ? "Required filed *" : null,
+                                  onChanged: (v) => _updateMonth(v),
+                                ),
                               ),
-                              Text(
-                                "No users added",
-                                style: TextStyle(fontSize: 21),
-                              ),
-                              TextButton(
-                                  onPressed: () {
-                                    widget.callback(2);
-                                  },
-                                  child: Text("Go to settings"))
-                            ],
-                          )
-                        : Column(
-                            children: [
                               makeStatCrad("Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
                               makeStatCrad("Total Owe", Colors.green, MaterialIcons.account_balance),
                               makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
                             ],
                           )
-                  ],
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
       ],
     );
+  }
+
+  void _updateMonth(String v) {
+    widget.model.setCurrentMonth(v);
+    setState(() {
+      expenseShares = widget.model.calculateShares();
+    });
   }
 
   void _takeScreenShot() async {

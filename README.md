@@ -56,15 +56,14 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 11. - [x] Import/Export data (JSON ?) also as an Excel sheet?
 12. - [x] Add custom icon for production app.
 13. - [x] App signing for distribution.
-14. - [ ] Sort the data according to time at modification.
+14. - [x] Sort the data according to time at modification.
 13. - [x] Mocks for presentation 
 13. - [x] First sharable production build.
 14. - [ ] Introduce search functionality to the log page.
-15. - [ ] Separate data into months and a provide a option to set it.
+15. - [x] Separate data into months and a provide a option to set it.
 15. - [ ] Firebase authentication to sync between multiple devices.  
-* - [ ] Bring the share page in the main entry page.
-* - [ ] Add new entry without leaving the page.
-* - [ ] Share image white background with top bar
+2. - [ ] Add new entry without leaving the page.
+1. - [x] Share image white background with top bar
 </details>  
 
 

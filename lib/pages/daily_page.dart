@@ -15,19 +15,11 @@ class DailyPage extends StatelessWidget {
     List<Map<String, dynamic>> _expenses = model.getExpenses;
 
     return Scaffold(
-      // backgroundColor: grey.withOpacity(0.05),
       body: Column(
         children: [
           Container(
             decoration: BoxDecoration(
-              // color: white,
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: grey.withOpacity(0.01),
-              //     spreadRadius: 10,
-              //     blurRadius: 3,
-              //   ),
-              // ],
+
               gradient: LinearGradient(
                 colors: myColors[0],
                 begin: Alignment.bottomCenter,

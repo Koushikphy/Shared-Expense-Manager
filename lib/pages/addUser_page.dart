@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_expenses/theme/colors.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
-import 'package:shared_expenses/pages/newentry_page.dart';
-import 'package:animations/animations.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+
+// add an option to remove or edit users
 class AddUserCat extends StatefulWidget {
   final BuildContext context;
   final int type;

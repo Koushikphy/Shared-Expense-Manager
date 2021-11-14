@@ -16,8 +16,3 @@ List<List<Color>> myColors = [
   [Color(0xffDA0959), Color(0xffF47DCB)]
 ];
 
-// Color(0xff2b32b2), Color(0xff1488cc)
-// secondary, Color(0xfff953c6)
-// Color(0xff016D18), Color(0xff93bb3c)
-//Color(0xffDA0959), Color(0xffF47DCB)
-//Color(0xff008F7A), Color(0xffAA7BF8)

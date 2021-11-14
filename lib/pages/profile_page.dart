@@ -12,6 +12,7 @@ import 'package:shared_expenses/pages/addUser_page.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:animations/animations.dart';
+import 'package:share/share.dart';
 
 class ProfilePage extends StatefulWidget {
   final ExpenseModel model;
@@ -94,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Text(
-              "v 0.1.0",
+              "v 0.1.1",
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -184,25 +185,63 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 15,
               ),
               SizedBox(
-                height: 21,
+                height: 13,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    iconSize: 35,
-                    tooltip: "Download the data",
-                    icon: Icon(FlutterIcons.download_faw5s),
-                    onPressed: showChangeDialog,
-                  ),
-                  IconButton(
-                    iconSize: 35,
-                    tooltip: "Upload the data",
-                    icon: Icon(FlutterIcons.upload_faw5s),
-                    onPressed: saveUserData,
-                  )
-                ],
+              InkWell(
+                onTap: exportData,
+                child: Row(
+                  children: [
+                    Icon(FlutterIcons.file_export_faw5s),
+                    SizedBox(width: 10),
+                    Text(
+                      "Export Data",
+                      style: TextStyle(
+                        fontSize: 21,
+                      ),
+                    )
+                  ],
+                ),
               ),
+              Divider(
+                indent: 30,
+                thickness: 1.0,
+                height: 15,
+              ),
+              SizedBox(
+                height: 13,
+              ),
+              InkWell(
+                onTap: importData,
+                child: Row(
+                  children: [
+                    Icon(FlutterIcons.file_import_faw5s),
+                    SizedBox(width: 10),
+                    Text(
+                      "Import Data",
+                      style: TextStyle(
+                        fontSize: 21,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     IconButton(
+              //       iconSize: 35,
+              //       tooltip: "Download the data",
+              //       icon: Icon(FlutterIcons.download_faw5s),
+              //       onPressed: importData,
+              //     ),
+              //     IconButton(
+              //       iconSize: 35,
+              //       tooltip: "Upload the data",
+              //       icon: Icon(FlutterIcons.upload_faw5s),
+              //       onPressed: exportData,
+              //     )
+              //   ],
+              // ),
             ],
           ),
         ),
@@ -370,7 +409,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void showChangeDialog() {
+  void importData() {
     showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -404,34 +443,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // void showWarningDialog(String param) {
-  //   showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Alert !'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text('Can not modify existing $param'),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text('OK'),
-  //             onPressed: () {
-  //               widget.model.resetAll();
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   void loadUserData() async {
     FilePickerResult result = await FilePicker.platform.pickFiles();
     if (result == null) {
@@ -450,7 +461,7 @@ class _ProfilePageState extends State<ProfilePage> {
     widget.model.newDataLoaded(_uList, _cList, _exList);
   }
 
-  void saveUserData() async {
+  void exportData() async {
     // await Permission.storage.request();
     // var status = await Permission.storage.request();
 
@@ -461,14 +472,16 @@ class _ProfilePageState extends State<ProfilePage> {
     // it returns permission denied, so the file is saved in a given storage only for now.
     final directory = await getExternalStorageDirectory();
     String fileName = "${directory.path}/Expenses_$timeStamp.txt";
+    File file = File(fileName);
 
-    File(fileName).writeAsString(json.encode({
+    file.writeAsString(json.encode({
       "users": widget.model.getUsers,
       "categories": widget.model.getCategories,
       "expenses": widget.model.getExpenses
     }));
 
-    final snackBar = SnackBar(content: Text('File Saved'));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    await Share.shareFiles([file.path]);
+    // final snackBar = SnackBar(content: Text('File Saved'));
+    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
