@@ -18,16 +18,24 @@ class StatsPage extends StatefulWidget {
   _StatsPageState createState() => _StatsPageState();
 }
 
-class _StatsPageState extends State<StatsPage> {
+class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMixin {
   Map<String, Map<String, double>> expenseShares;
   List<String> users;
   final _screenShotController = ScreenshotController();
+  TabController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = TabController(vsync: this, length: 13, initialIndex: int.parse(widget.model.getCurrentMonth) - 1);
     users = widget.model.getUsers;
     expenseShares = widget.model.calculateShares();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,6 +63,7 @@ class _StatsPageState extends State<StatsPage> {
       "13": "All"
     };
 
+    // TabController _tabBarController = TabController(length: 13, vsync: this)
     return Column(
       children: [
         Container(
@@ -134,20 +143,24 @@ class _StatsPageState extends State<StatsPage> {
                         children: <Widget>[
                           Column(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                child: SelectFormField(
-                                  initialValue: widget.model.getCurrentMonth,
-                                  labelText: 'Select Month',
-                                  style: TextStyle(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  items: [
-                                    for (MapEntry e in months.entries) {'value': e.key, 'label': e.value}
-                                  ],
-                                  validator: (value) => value.isEmpty ? "Required filed *" : null,
-                                  onChanged: (v) => _updateMonth(v),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.black38, width: 1.5)),
+                                ),
+                                child: TabBar(
+                                  controller: _controller,
+                                  onTap: _updateMonthTab,
+                                  labelColor: Colors.blue,
+                                  unselectedLabelColor: Colors.black,
+                                  isScrollable: true,
+                                  tabs: List.generate(
+                                      months.length,
+                                      (i) => Tab(
+                                            child: Text(
+                                              months.values.toList()[i],
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                          )),
                                 ),
                               ),
                               makeStatCrad("Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
@@ -167,6 +180,13 @@ class _StatsPageState extends State<StatsPage> {
 
   void _updateMonth(String v) {
     widget.model.setCurrentMonth(v);
+    setState(() {
+      expenseShares = widget.model.calculateShares();
+    });
+  }
+
+  void _updateMonthTab(int v) {
+    widget.model.setCurrentMonth(v.toString());
     setState(() {
       expenseShares = widget.model.calculateShares();
     });
