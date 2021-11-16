@@ -6,7 +6,8 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:select_form_field/select_form_field.dart';
+// import 'package:select_form_field/select_form_field.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class StatsPage extends StatefulWidget {
   final ExpenseModel model;
@@ -20,6 +21,7 @@ class StatsPage extends StatefulWidget {
 
 class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMixin {
   Map<String, Map<String, double>> expenseShares;
+  Map<String, double> pieData;
   List<String> users;
   final _screenShotController = ScreenshotController();
   TabController _controller;
@@ -30,6 +32,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     _controller = TabController(vsync: this, length: 13, initialIndex: int.parse(widget.model.getCurrentMonth) - 1);
     users = widget.model.getUsers;
     expenseShares = widget.model.calculateShares();
+    pieData = widget.model.calculateCategoryShare();
+    print(pieData);
   }
 
   @override
@@ -163,6 +167,37 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                                           )),
                                 ),
                               ),
+                              Padding(padding: EdgeInsets.all(1)),
+                              Container(
+                                child: PieChart(
+                                  dataMap: pieData,
+                                  animationDuration: Duration(milliseconds: 800),
+                                  chartLegendSpacing: 10,
+                                  chartRadius: MediaQuery.of(context).size.width / 2,
+                                  // colorList: colorList,
+                                  initialAngleInDegree: 0,
+                                  chartType: ChartType.disc,
+                                  ringStrokeWidth: 20,
+                                  // centerText: "HYBRID",
+                                  legendOptions: LegendOptions(
+                                    showLegendsInRow: false,
+                                    legendPosition: LegendPosition.right,
+                                    showLegends: true,
+                                    // legendShape: _BoxShape.circle,
+                                    legendTextStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  chartValuesOptions: ChartValuesOptions(
+                                    showChartValueBackground: false,
+                                    showChartValues: true,
+                                    showChartValuesInPercentage: true,
+                                    showChartValuesOutside: false,
+                                  ),
+                                  // gradientList: ---To add gradient colors---
+                                  // emptyColorGradient: ---Empty Color gradient---
+                                ),
+                              ),
                               makeStatCrad("Total Spends", Colors.pink, MaterialCommunityIcons.shopping),
                               makeStatCrad("Total Owe", Colors.green, MaterialIcons.account_balance),
                               makeStatCrad("Net Owe", Colors.purple, MaterialIcons.payment),
@@ -178,17 +213,18 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     );
   }
 
-  void _updateMonth(String v) {
-    widget.model.setCurrentMonth(v);
-    setState(() {
-      expenseShares = widget.model.calculateShares();
-    });
-  }
+  // void _updateMonth(String v) {
+  //   widget.model.setCurrentMonth(v);
+  //   setState(() {
+  //     expenseShares = widget.model.calculateShares();
+  //   });
+  // }
 
   void _updateMonthTab(int v) {
-    widget.model.setCurrentMonth(v.toString());
+    widget.model.setCurrentMonth((v + 1).toString());
     setState(() {
       expenseShares = widget.model.calculateShares();
+      pieData = widget.model.calculateCategoryShare();
     });
   }
 
@@ -218,7 +254,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 5, bottom: 10, left: 5, right: 5),
+                padding: EdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
                 child: Container(
                   child: Column(
                     children: <Widget>[
@@ -231,7 +267,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                           Text(
                             cardType,
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 20,
                               color: color.shade800,
                               fontWeight: FontWeight.w500,
                             ),
@@ -248,7 +284,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(7),
                 child: Column(
                     children: List.generate(
                   users.length,
@@ -263,7 +299,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                               child: Text(
                                 " ${users[index]}",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   color: black,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -275,7 +311,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                                 // align these values to the decimal places
                                 "₹  ${expenseShares[cardType][users[index]].toStringAsFixed(2)}  ",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   color: black,
                                   fontWeight: FontWeight.w500,
                                 ),

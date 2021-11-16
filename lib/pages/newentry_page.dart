@@ -26,6 +26,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
   TextEditingController _categoryEditor = TextEditingController();
   ExpenseModel model;
   bool showError = false;
+  FormState formState;
 
   bool editRecord;
 
@@ -42,6 +43,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
   @override
   void initState() {
     model = ScopedModel.of(widget.context);
+    // formKey.currentState.save();
     super.initState();
     editRecord = widget.index != -999;
     if (editRecord) {
@@ -73,26 +75,12 @@ class _NewEntryLogState extends State<NewEntryLog> {
       appBar: AppBar(
         backgroundColor: secondary,
         actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              if (formKey.currentState.validate() && sharedProperly()) {
-                Map<String, dynamic> data = {
-                  "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
-                  "person": _personEditor.text,
-                  "item": _itemEditor.text,
-                  "category": _categoryEditor.text,
-                  "amount": _amountEditor.text,
-                  "shareBy": aList //.map((e) => e.toString()).join(',')
-                };
-                editRecord ? model.editExpense(widget.index, data) : model.addExpense(data);
-                widget.callback(0); //move to log page
-                Navigator.pop(context);
-              }
-            },
-            icon: Icon(Icons.save),
-            color: Colors.white,
-            tooltip: "Save ",
-          ),
+          // IconButton(
+          //   onPressed: saveRecord,
+          //   icon: Icon(Icons.save),
+          //   color: Colors.white,
+          //   tooltip: "Save ",
+          // ),
           SizedBox(
             width: 10,
           ),
@@ -182,7 +170,6 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       ),
                       SizedBox(height: 15),
                       DateTimePicker(
-                          
                           controller: _dateEditor,
                           type: DateTimePickerType.date,
                           dateMask: 'd MMM, yyyy',
@@ -301,13 +288,66 @@ class _NewEntryLogState extends State<NewEntryLog> {
                               )
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
       ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                // saveRecord();
+                clearForm();
+              },
+              child: Text(
+                "Save & Add anoter",
+                style: TextStyle(fontSize: 18, color: Colors.deepPurple),
+              ),
+            ),
+            TextButton(
+              onPressed: saveRecord,
+              child: Text(
+                "Save",
+                style: TextStyle(fontSize: 18, color: Colors.deepPurple),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  saveRecord() {
+    if (formKey.currentState.validate() && sharedProperly()) {
+      Map<String, dynamic> data = {
+        "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
+        "person": _personEditor.text,
+        "item": _itemEditor.text,
+        "category": _categoryEditor.text,
+        "amount": _amountEditor.text,
+        "shareBy": aList //.map((e) => e.toString()).join(',')
+      };
+      editRecord ? model.editExpense(widget.index, data) : model.addExpense(data);
+      widget.callback(0); //move to log page
+      Navigator.pop(context);
+    }
+  }
+
+  clearForm() {
+    // _itemEditor.clear();
+    _personEditor.clearComposing();
+    // _amountEditor = TextEditingController();
+    // _dateEditor = TextEditingController(text: DateTime.now().toString());
+    _categoryEditor.clear();
+    formKey.currentState.reset();
+    print(formKey.currentState);
+    // Navigator.popAndPushNamed(context, "same_route");
+    aList = {for (var u in model.getUsers) u: "0.00"};
   }
 
   getTheValue(Map<String, String> val) {

@@ -137,6 +137,24 @@ class ExpenseModel extends Model {
     return tmpStats;
   }
 
+  Map<String, double> calculateCategoryShare() {
+    Map<String, double> cShare = {for (var v in _categories) v: 0};
+    for (Map entry in _expenses) {
+      String month = int.parse(entry['date'].split('-')[1]).toString();
+
+      if (_currentMonth != '13' && _currentMonth != month) {
+        continue;
+      }
+      cShare[entry['category']] += double.parse(entry['amount']);
+    }
+
+    Map pieData = <String, double>{};
+    for (String en in _categories) {
+      pieData[en + " ₹ ${cShare[en]}"] = cShare[en];
+    }
+    return pieData;
+  }
+
   void sortExpenses() {
     _expenses
         .sort((a, b) => DateFormat("dd-MM-yyyy").parse(a['date']).compareTo(DateFormat("dd-MM-yyyy").parse(b['date'])));

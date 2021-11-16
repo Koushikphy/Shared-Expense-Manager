@@ -45,6 +45,7 @@ dependencies:
   animations: ^2.0.0
   screenshot: ^0.3.0
   share: ^2.0.1
+  pie_chart: ^5.1.0
   
 dev_dependencies:
   flutter_test:
