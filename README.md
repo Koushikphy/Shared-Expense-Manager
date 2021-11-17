@@ -22,9 +22,9 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 
 ### Usage 
 * **Download** the app from the [release section](https://github.com/Koushikphy/Shared-Expense-Manager/releases).
-* Add list of users and categories seperated by comma (,) in the setting page.
+* Add list of users and categories in the setting page.
 * Tap on the `+` button to add new expense record.
-* Check the Stats page for current expenses status.
+* Check the Sharess page for current expenses status.
 * Tap on individual record in the log page to edit/delete them.  
 * Save/Load expense record to/from local file from the setting page.
 
@@ -42,7 +42,7 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
     1. - [x] Page to log all expenses and show them in a list view.
     2. - [x] Page to display details of a single entry.
     3. - [x] Dashboard page to display the shares
-    6. - [ ] Chart pages ? > Time Series/Pie category
+    6. - [x] Chart pages ? > Time Series/Pie category
     5. - [x] Profile/Setting page to edit users list, categories, import/export settings
     4. - [x] Add new entry page
     5. - [x] Change pages with swipe
@@ -61,9 +61,9 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 13. - [x] First sharable production build.
 14. - [ ] Introduce search functionality to the log page.
 15. - [x] Separate data into months and a provide a option to set it.
-15. - [ ] Firebase authentication to sync between multiple devices.  
-2. - [ ] Add new entry without leaving the page.
+2. - [x] Add new entry without leaving the page.
 1. - [x] Share image white background with top bar
+15. - [ ] Firebase authentication to sync between multiple devices.  
 </details>  
 
 

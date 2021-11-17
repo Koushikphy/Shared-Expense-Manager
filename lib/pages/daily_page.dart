@@ -34,7 +34,7 @@ class DailyPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "Expense Log",
+                    "Expenses",
                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],

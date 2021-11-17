@@ -158,9 +158,6 @@ class ExpenseModel extends Model {
   void sortExpenses() {
     _expenses
         .sort((a, b) => DateFormat("dd-MM-yyyy").parse(a['date']).compareTo(DateFormat("dd-MM-yyyy").parse(b['date'])));
-    for (var v in _expenses) {
-      print(v);
-    }
   }
 
   testData() {

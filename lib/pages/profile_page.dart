@@ -95,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Text(
-              "v 0.1.1",
+              "v 0.1.2",
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -225,23 +225,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-              //     IconButton(
-              //       iconSize: 35,
-              //       tooltip: "Download the data",
-              //       icon: Icon(FlutterIcons.download_faw5s),
-              //       onPressed: importData,
-              //     ),
-              //     IconButton(
-              //       iconSize: 35,
-              //       tooltip: "Upload the data",
-              //       icon: Icon(FlutterIcons.upload_faw5s),
-              //       onPressed: exportData,
-              //     )
-              //   ],
-              // ),
             ],
           ),
         ),
@@ -288,92 +271,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     return false;
   }
-
-  // void showUserDialog() {
-  //   showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Clear Expense Entries'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text('Enter user list'),
-  //               TextFormField(
-  //                 controller: userControler,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text('OK'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //               List<String> uList = userControler.text.toString().split(',').map((e) => e.trim()).toList();
-
-  //               if (widget.model.getUsers.length != 0 && notContains(widget.model.getUsers, uList)) {
-  //                 showWarningDialog("users");
-  //               } else {
-  //                 widget.model.setUsers(uList);
-  //               }
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text('Cancle'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void showCategoryDialog() {
-  //   showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Clear Expense Entries'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text('Enter category list'),
-  //               TextFormField(
-  //                 controller: categoryControler,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text('OK'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //               List<String> cList = categoryControler.text.toString().split(',').map((e) => e.trim()).toList();
-
-  //               if (widget.model.getCategories.length != 0 && notContains(widget.model.getCategories, cList)) {
-  //                 showWarningDialog("users");
-  //               } else {
-  //                 widget.model.setCategories(cList);
-  //               }
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text('Cancle'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void showResetDialog() {
     showDialog<void>(

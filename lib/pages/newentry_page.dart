@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
-import 'package:shared_expenses/pages/share_page.dart';
+// import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -18,15 +18,18 @@ class NewEntryLog extends StatefulWidget {
 
 class _NewEntryLogState extends State<NewEntryLog> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  Map<String, String> aList;
   TextEditingController _itemEditor = TextEditingController();
   TextEditingController _personEditor = TextEditingController();
   TextEditingController _amountEditor = TextEditingController();
   TextEditingController _dateEditor = TextEditingController(text: DateTime.now().toString());
   TextEditingController _categoryEditor = TextEditingController();
+  List<TextEditingController> _shareControler;
+
+  Map<String, String> shareList;
   ExpenseModel model;
   bool showError = false;
-  FormState formState;
+  List<bool> _checkList;
+  List<String> _users;
 
   bool editRecord;
 
@@ -38,14 +41,18 @@ class _NewEntryLogState extends State<NewEntryLog> {
     _amountEditor.dispose();
     _dateEditor.dispose();
     _categoryEditor.dispose();
+    _shareControler.forEach((element) {
+      element.dispose();
+    });
   }
 
   @override
   void initState() {
     model = ScopedModel.of(widget.context);
-    // formKey.currentState.save();
     super.initState();
     editRecord = widget.index != -999;
+    _users = model.getUsers;
+
     if (editRecord) {
       Map<String, dynamic> data = {...model.getExpenses[widget.index]};
       _itemEditor.text = data['item'];
@@ -53,37 +60,29 @@ class _NewEntryLogState extends State<NewEntryLog> {
       _amountEditor.text = data['amount'];
       _dateEditor.text = DateFormat("dd-MM-yyyy").parse(data['date']).toString();
       _categoryEditor.text = data['category'];
-      aList = Map<String, String>.from(
-          model.getExpenses[widget.index]["shareBy"]); //.split(',').map((e) => double.parse(e)).toList();
+      shareList = Map<String, String>.from(model.getExpenses[widget.index]["shareBy"]);
+
       // fill users if not present
-      if (model.getUsers.length != aList.length) {
+      if (_users.length != shareList.length) {
         for (String u in model.getUsers) {
-          if (!aList.containsKey(u)) {
-            aList[u] = "0.00";
+          if (!shareList.containsKey(u)) {
+            shareList[u] = "0.00";
           }
         }
       }
     } else {
-      aList = {for (var u in model.getUsers) u: "0.00"};
+      shareList = {for (var u in model.getUsers) u: "0.00"};
     }
+    _checkList = _users.map((e) => double.parse(shareList[e]) != 0).toList();
+    _shareControler = _users.map((e) => TextEditingController(text: shareList[e])).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    // var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: secondary,
         actions: <Widget>[
-          // IconButton(
-          //   onPressed: saveRecord,
-          //   icon: Icon(Icons.save),
-          //   color: Colors.white,
-          //   tooltip: "Save ",
-          // ),
-          SizedBox(
-            width: 10,
-          ),
           IconButton(
             onPressed: () {
               if (editRecord) model.deleteExpense(widget.index);
@@ -99,7 +98,6 @@ class _NewEntryLogState extends State<NewEntryLog> {
         ],
       ),
       body: SingleChildScrollView(
-        // key: ValueKey<int>(count1),
         child: (model.getUsers.length == 0 || model.getCategories.length == 0)
             ? Container(
                 width: double.infinity,
@@ -129,7 +127,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        autovalidateMode: AutovalidateMode.disabled,
                         decoration: const InputDecoration(
                           icon: Icon(Icons.shopping_cart_outlined),
                           hintText: 'Where did you spent the money?',
@@ -152,7 +150,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         validator: (value) => value.isEmpty ? "Required filed *" : null,
                       ),
                       TextFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        autovalidateMode: AutovalidateMode.disabled,
                         keyboardType: TextInputType.number,
                         controller: _amountEditor,
                         decoration: const InputDecoration(
@@ -181,6 +179,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       SizedBox(height: 15),
                       SelectFormField(
                         // key: ValueKey<int>(count2),
+                        autovalidate: false,
                         type: SelectFormFieldType.dropdown, // or can be dialog
                         controller: _categoryEditor,
                         icon: Icon(Icons.category),
@@ -197,98 +196,73 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       ),
                       SizedBox(height: 15),
                       SizedBox(height: 15),
-                      InkWell(
-                        onTap: () {
-                          double val = double.parse(_amountEditor.text);
-                          if (val != null) {
-                            double summed = 0.0;
-                            for (String v in aList.values) {
-                              summed += double.parse(v);
-                            }
-                            if (summed != val) aList = {for (var u in model.getUsers) u: "0.00"};
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SharePage(
-                                  value: val,
-                                  users: model.getUsers,
-                                  initValue: aList,
-                                  callback: getTheValue,
-                                ),
-                              ),
-                            );
-                          }
-                        },
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            color: Colors.black.withOpacity(.6),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Shared Between",
+                                  style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(.7)),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.people_outline,
-                                  color: Colors.black.withOpacity(.6),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Shared Between",
-                                        style: TextStyle(fontSize: 16, color: Colors.black.withOpacity(.7)),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: aList.entries
-                                      .map(
-                                        (e) => Padding(
-                                          padding: const EdgeInsets.only(right: 15, bottom: 5),
-                                          child: Text(
-                                            e.key,
-                                            style: TextStyle(fontSize: 15),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: aList.entries
-                                      .map((e) => Padding(
-                                            padding: const EdgeInsets.only(left: 15, bottom: 5),
-                                            child: Text(e.value, style: TextStyle(fontSize: 15)),
-                                          ))
-                                      .toList(),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 30, top: 8),
-                              child: Divider(
-                                indent: 2,
-                                color: Colors.black,
-                              ),
-                            ),
-                            if (showError)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            _users.length,
+                            (index) {
+                              return Row(
                                 children: [
-                                  Text(
-                                    "* Amount should be shared properly.",
-                                    style: TextStyle(color: Colors.red),
+                                  Checkbox(
+                                      value: _checkList[index],
+                                      onChanged: (v) {
+                                        _checkList[index] = v;
+                                        updateSharingDetails();
+                                      }),
+                                  Container(
+                                    width: (MediaQuery.of(context).size.width - 100) * .4,
+                                    child: Text(
+                                      _users[index],
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                  Text("₹ ", style: TextStyle(fontSize: 14)),
+                                  Container(
+                                    width: (MediaQuery.of(context).size.width - 100) * .4,
+                                    child: TextField(
+                                      enabled: _checkList[index],
+                                      controller: _shareControler[index],
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(border: InputBorder.none),
+                                      style: TextStyle(fontSize: 14),
+                                    ),
                                   ),
                                 ],
-                              )
-                          ],
+                              );
+                            },
+                          ),
                         ),
                       ),
+                      if (showError)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "* Amount should be shared properly.",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -300,17 +274,20 @@ class _NewEntryLogState extends State<NewEntryLog> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
-              onPressed: () {
-                // saveRecord();
-                clearForm();
-              },
+              onPressed: clearForm,
               child: Text(
                 "Save & Add anoter",
                 style: TextStyle(fontSize: 18, color: Colors.deepPurple),
               ),
             ),
             TextButton(
-              onPressed: saveRecord,
+              onPressed: () {
+                bool saved = saveRecord();
+                if (saved) {
+                  widget.callback(0); //move to log page
+                  Navigator.pop(context);
+                }
+              },
               child: Text(
                 "Save",
                 style: TextStyle(fontSize: 18, color: Colors.deepPurple),
@@ -330,39 +307,41 @@ class _NewEntryLogState extends State<NewEntryLog> {
         "item": _itemEditor.text,
         "category": _categoryEditor.text,
         "amount": _amountEditor.text,
-        "shareBy": aList //.map((e) => e.toString()).join(',')
+        "shareBy": shareList
       };
       editRecord ? model.editExpense(widget.index, data) : model.addExpense(data);
-      widget.callback(0); //move to log page
-      Navigator.pop(context);
+      return true;
     }
   }
 
   clearForm() {
-    // _itemEditor.clear();
-    _personEditor.clearComposing();
-    // _amountEditor = TextEditingController();
-    // _dateEditor = TextEditingController(text: DateTime.now().toString());
-    _categoryEditor.clear();
+    bool saved = saveRecord();
+    if (!saved) return;
     formKey.currentState.reset();
-    print(formKey.currentState);
-    // Navigator.popAndPushNamed(context, "same_route");
-    aList = {for (var u in model.getUsers) u: "0.00"};
-  }
-
-  getTheValue(Map<String, String> val) {
-    setState(() {
-      aList = val;
-    });
+    _itemEditor.clear();
+    _amountEditor.clear();
+    // keep the person selector, category selector and date as it is while clearing the form
+    // _personEditor?.clear();
+    // _categoryEditor.clear();
+    // _dateEditor.text = DateTime.now().toString();
+    shareList = {for (var u in model.getUsers) u: "0.00"};
+    _checkList = _users.map((_) => false).toList();
+    for (TextEditingController e in _shareControler) {
+      e.text = "0.00";
+    }
+    _shareControler = _users.map((e) => TextEditingController(text: shareList[e])).toList();
+    editRecord = false;
+    setState(() {});
+    print(shareList);
   }
 
   sharedProperly() {
     double summed = 0;
-    for (String v in aList.values) {
+    for (String v in shareList.values) {
       summed += double.parse(v);
     }
-    // aList.fold(0, (a, b) => a + b);
-    var val = double.parse(_amountEditor.text);
+
+    double val = double.parse(_amountEditor.text);
     if (val == null) return false;
     if (summed == val) {
       showError = false;
@@ -373,5 +352,31 @@ class _NewEntryLogState extends State<NewEntryLog> {
       });
       return false;
     }
+  }
+
+  updateSharingDetails() {
+    double value = double.parse(_amountEditor.text);
+    double amount = value / _checkList.where((element) => element == true).length;
+    amount = double.parse(amount.toStringAsFixed(2));
+
+    List<double> iAmount = _checkList.map((e) => e ? amount : 0.0).toList();
+    double diff = value;
+    for (double e in iAmount) {
+      diff -= e;
+    }
+
+    if (diff != 0) {
+      for (int i = 0; i < _users.length; i++) {
+        if (_checkList[i]) {
+          iAmount[i] += diff;
+          break;
+        }
+      }
+    }
+    for (int i = 0; i < _users.length; i++) {
+      _shareControler[i].text = iAmount[i].toStringAsFixed(2);
+      shareList[_users[i]] = iAmount[i].toStringAsFixed(2);
+    }
+    setState(() {});
   }
 }

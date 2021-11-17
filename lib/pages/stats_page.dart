@@ -95,7 +95,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Stats",
+                      "Shares",
                       style: TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.bold,
@@ -212,13 +212,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       ],
     );
   }
-
-  // void _updateMonth(String v) {
-  //   widget.model.setCurrentMonth(v);
-  //   setState(() {
-  //     expenseShares = widget.model.calculateShares();
-  //   });
-  // }
 
   void _updateMonthTab(int v) {
     widget.model.setCurrentMonth((v + 1).toString());
