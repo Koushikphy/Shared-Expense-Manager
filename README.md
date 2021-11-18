@@ -6,7 +6,7 @@
 
 
 <p align="center">
-  <a href="#" alt="Version"><img src="https://img.shields.io/badge/Version-0.1.0-brightgreen.svg?style=for-the-badge" /></a>
+  <a href="#" alt="Version"><img src="https://img.shields.io/badge/Version-0.1.2-brightgreen.svg?style=for-the-badge" /></a>
   <a href="https://github.com/Koushikphy/Shared-Expense-Manager/blob/master/LICENSE" alt="Version"><img src="https://img.shields.io/badge/License-MIT-brightgreen.svg?style=for-the-badge" /></a>
   <a href="https://github.com/Koushikphy/Shared-Expense-Manager/releases" alt="Version"><img src="https://img.shields.io/badge/Download-apk-blue?style=for-the-badge" /></a>
 </p>
@@ -24,7 +24,7 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 * **Download** the app from the [release section](https://github.com/Koushikphy/Shared-Expense-Manager/releases).
 * Add list of users and categories in the setting page.
 * Tap on the `+` button to add new expense record.
-* Check the Sharess page for current expenses status.
+* Check the Shares page for current expenses status.
 * Tap on individual record in the log page to edit/delete them.  
 * Save/Load expense record to/from local file from the setting page.
 
