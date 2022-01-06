@@ -3,6 +3,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:flutter/material.dart';
+
+class Expense {
+  final int id;
+  final String date;
+  final String person;
+  final String item;
+  final String category;
+  final String amount;
+  final Map<String, String> sharedBy;
+
+  Expense({
+    this.id,
+    this.date,
+    this.person,
+    this.item,
+    this.category,
+    this.amount,
+    this.sharedBy,
+  });
+}
 
 class ExpenseModel extends Model {
   ExpenseModel() {
@@ -156,8 +180,8 @@ class ExpenseModel extends Model {
   }
 
   void sortExpenses() {
-    _expenses
-        .sort((a, b) => DateFormat("dd-MM-yyyy").parse(a['date']).compareTo(DateFormat("dd-MM-yyyy").parse(b['date'])));
+    // _expenses
+    //     .sort((a, b) => DateFormat("dd-MM-yyyy").parse(a['date']).compareTo(DateFormat("dd-MM-yyyy").parse(b['date'])));
   }
 
   testData() {

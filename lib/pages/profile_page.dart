@@ -12,7 +12,8 @@ import 'package:shared_expenses/pages/addUser_page.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:animations/animations.dart';
-import 'package:share/share.dart';
+// import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProfilePage extends StatefulWidget {
   final ExpenseModel model;
