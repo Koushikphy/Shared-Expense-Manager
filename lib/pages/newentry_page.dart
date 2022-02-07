@@ -146,6 +146,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                   "value": e,
                                   "label": e,
                                 })
+                            .map((e) => Map<String, dynamic>.from(e)) // select form field items require <String,dynamic>
                             .toList(),
                         validator: (value) => value.isEmpty ? "Required filed *" : null,
                       ),
@@ -168,14 +169,15 @@ class _NewEntryLogState extends State<NewEntryLog> {
                       ),
                       SizedBox(height: 15),
                       DateTimePicker(
-                          controller: _dateEditor,
-                          type: DateTimePickerType.date,
-                          dateMask: 'd MMM, yyyy',
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                          icon: Icon(Icons.event),
-                          dateLabelText: 'Date',
-                          validator: (value) => value.isEmpty ? "Required field *" : null),
+                        controller: _dateEditor,
+                        type: DateTimePickerType.date,
+                        dateMask: 'd MMM, yyyy',
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        icon: Icon(Icons.event),
+                        dateLabelText: 'Date',
+                        validator: (value) => value.isEmpty ? "Required field *" : null,
+                      ),
                       SizedBox(height: 15),
                       SelectFormField(
                         // key: ValueKey<int>(count2),
@@ -190,6 +192,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                   "value": e,
                                   "label": e,
                                 })
+                            .map((e) => Map<String, dynamic>.from(e))
                             .toList(),
 
                         validator: (value) => value.isEmpty ? "Required field *" : null,
@@ -300,6 +303,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
   }
 
   saveRecord() {
+    print('saverecord');
     if (formKey.currentState.validate() && sharedProperly()) {
       Map<String, dynamic> data = {
         "date": DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(_dateEditor.text)),
@@ -337,8 +341,9 @@ class _NewEntryLogState extends State<NewEntryLog> {
 
   sharedProperly() {
     for (int i = 0; i < _users.length; i++) {
-      shareList[_users[i]] = _shareControler[i].text
+      shareList[_users[i]] = double.parse(_shareControler[i].text).toStringAsFixed(2);
     }
+    // print(shareList);
     double summed = 0;
     for (String v in shareList.values) {
       summed += double.parse(v);
