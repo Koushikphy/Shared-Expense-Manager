@@ -3,11 +3,14 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:shared_expenses/theme/colors.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share/share.dart';
+// import 'package:share/share.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 // import 'package:select_form_field/select_form_field.dart';
 import 'package:pie_chart/pie_chart.dart';
+// import 'package:share_extend/share_extend.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class StatsPage extends StatefulWidget {
   final ExpenseModel model;
@@ -223,8 +226,9 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   void _takeScreenShot() async {
     final imageFile = await _screenShotController.capture();
+    ImageGallerySaver.saveImage(imageFile, name: "test_screenshot");
     String tempPath = (await getTemporaryDirectory()).path;
-    File file = File('$tempPath/image.png');
+    File file = File('$tempPath/image.jpg');
     await file.writeAsBytes(imageFile);
     await Share.shareFiles([file.path]);
   }
