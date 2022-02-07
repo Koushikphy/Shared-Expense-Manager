@@ -336,6 +336,9 @@ class _NewEntryLogState extends State<NewEntryLog> {
   }
 
   sharedProperly() {
+    for (int i = 0; i < _users.length; i++) {
+      shareList[_users[i]] = _shareControler[i].text
+    }
     double summed = 0;
     for (String v in shareList.values) {
       summed += double.parse(v);
