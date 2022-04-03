@@ -6,6 +6,9 @@ import 'package:shared_expenses/scoped_model/expenseScope.dart';
 // import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
 import 'package:scoped_model/scoped_model.dart';
+// import 'package:flutter_spinbox/flutter_spinbox.dart';
+// import 'package:flutter_touch_spin/flutter_touch_spin.dart';
+import 'package:collection/collection.dart';
 
 class NewEntryLog extends StatefulWidget {
   final Function callback;
@@ -28,8 +31,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
   Map<String, String> shareList;
   ExpenseModel model;
   bool showError = false;
-  List<bool> _checkList;
   List<String> _users;
+  List<double> _sharedRatio;
 
   bool editRecord;
 
@@ -73,8 +76,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
     } else {
       shareList = {for (var u in model.getUsers) u: "0.00"};
     }
-    _checkList = _users.map((e) => double.parse(shareList[e]) != 0).toList();
     _shareControler = _users.map((e) => TextEditingController(text: shareList[e])).toList();
+    _sharedRatio = _users.map((e) => 1.00).toList();
   }
 
   @override
@@ -136,7 +139,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         controller: _itemEditor,
                         validator: (value) => value.isEmpty ? "Required filed *" : null,
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 9),
                       SelectFormField(
                         icon: Icon(Icons.person_outline),
                         labelText: 'Spent By',
@@ -146,7 +149,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                   "value": e,
                                   "label": e,
                                 })
-                            .map((e) => Map<String, dynamic>.from(e)) // select form field items require <String,dynamic>
+                            .map(
+                                (e) => Map<String, dynamic>.from(e)) // select form field items require <String,dynamic>
                             .toList(),
                         validator: (value) => value.isEmpty ? "Required filed *" : null,
                       ),
@@ -154,6 +158,9 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         autovalidateMode: AutovalidateMode.disabled,
                         keyboardType: TextInputType.number,
                         controller: _amountEditor,
+                        onChanged: (value) {
+                          updateSharingDetails();
+                        },
                         decoration: const InputDecoration(
                           icon: Icon(Icons.account_balance_wallet_outlined),
                           hintText: 'How much money is spent?',
@@ -167,7 +174,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 9),
                       DateTimePicker(
                         controller: _dateEditor,
                         type: DateTimePickerType.date,
@@ -178,7 +185,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         dateLabelText: 'Date',
                         validator: (value) => value.isEmpty ? "Required field *" : null,
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 9),
                       SelectFormField(
                         // key: ValueKey<int>(count2),
                         autovalidate: false,
@@ -197,8 +204,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
 
                         validator: (value) => value.isEmpty ? "Required field *" : null,
                       ),
-                      SizedBox(height: 15),
-                      SizedBox(height: 15),
+                      SizedBox(height: 9),
+                      SizedBox(height: 9),
                       Row(
                         children: [
                           Icon(
@@ -219,36 +226,99 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.symmetric(horizontal: 9),
                         child: Column(
                           children: List.generate(
                             _users.length,
                             (index) {
-                              return Row(
+                              return Column(
                                 children: [
-                                  Checkbox(
-                                      value: _checkList[index],
-                                      onChanged: (v) {
-                                        _checkList[index] = v;
-                                        updateSharingDetails();
-                                      }),
-                                  Container(
-                                    width: (MediaQuery.of(context).size.width - 100) * .4,
-                                    child: Text(
-                                      _users[index],
-                                      style: TextStyle(fontSize: 15),
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 9),
+                                        child: Text(
+                                          _users[index],
+                                          style: TextStyle(fontSize: 17),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text("₹ ", style: TextStyle(fontSize: 14)),
-                                  Container(
-                                    width: (MediaQuery.of(context).size.width - 100) * .4,
-                                    child: TextField(
-                                      enabled: _checkList[index],
-                                      controller: _shareControler[index],
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(border: InputBorder.none),
-                                      style: TextStyle(fontSize: 14),
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade400,
+                                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                                        // width: (MediaQuery.of(context).size.width - 100) * 0.5,
+                                        height: 21,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            IconButton(
+                                              padding: const EdgeInsets.all(0),
+                                              iconSize: 13,
+                                              color: _sharedRatio[index] == 0 ? Colors.black12 : Colors.black,
+                                              icon: const Icon(Icons.remove_circle_outline),
+                                              onPressed: () {
+                                                if (_sharedRatio[index] > 0) {
+                                                  _sharedRatio[index] -= 1;
+                                                  updateSharingDetails();
+                                                }
+                                              },
+                                            ),
+                                            Text(
+                                              _sharedRatio[index].toStringAsFixed(2),
+                                              style: const TextStyle(fontSize: 16),
+                                            ),
+                                            IconButton(
+                                              padding: const EdgeInsets.all(0),
+                                              iconSize: 13,
+                                              color: _sharedRatio[index] == 99 ? Colors.black12 : Colors.black,
+                                              icon: const Icon(Icons.add_circle_outline),
+                                              onPressed: () {
+                                                if (_sharedRatio[index] < 99) {
+                                                  _sharedRatio[index] += 1;
+                                                  updateSharingDetails();
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text("₹ ", style: TextStyle(fontSize: 14)),
+                                          Container(
+                                            height: 21,
+                                            width: (MediaQuery.of(context).size.width - 100) * 0.5,
+                                            padding: EdgeInsets.only(left: 7),
+                                            child: TextField(
+                                              onChanged: (val) {
+                                                sharedProperly();
+                                              },
+                                              textAlign: TextAlign.left,
+                                              enabled: _sharedRatio[index] != 0,
+                                              controller: _shareControler[index],
+                                              keyboardType: TextInputType.number,
+                                              decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                                enabledBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.black26),
+                                                ),
+                                                focusedBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.black38),
+                                                ),
+                                              ),
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ],
                               );
@@ -260,9 +330,12 @@ class _NewEntryLogState extends State<NewEntryLog> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "* Amount should be shared properly.",
-                              style: TextStyle(color: Colors.red),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 9),
+                              child: Text(
+                                "* Amount should be shared properly.",
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ),
                           ],
                         ),
@@ -329,14 +402,13 @@ class _NewEntryLogState extends State<NewEntryLog> {
     // _categoryEditor.clear();
     // _dateEditor.text = DateTime.now().toString();
     shareList = {for (var u in model.getUsers) u: "0.00"};
-    _checkList = _users.map((_) => false).toList();
+    // _checkList = _users.map((_) => false).toList();
     for (TextEditingController e in _shareControler) {
       e.text = "0.00";
     }
     _shareControler = _users.map((e) => TextEditingController(text: shareList[e])).toList();
     editRecord = false;
     setState(() {});
-    print(shareList);
   }
 
   sharedProperly() {
@@ -362,12 +434,17 @@ class _NewEntryLogState extends State<NewEntryLog> {
     }
   }
 
+  // updateRatio(String val, int index) {
+  //   double thisAmount = double.parse(val);
+
+  // }
+
   updateSharingDetails() {
     double value = double.parse(_amountEditor.text);
-    double amount = value / _checkList.where((element) => element == true).length;
-    amount = double.parse(amount.toStringAsFixed(2));
 
-    List<double> iAmount = _checkList.map((e) => e ? amount : 0.0).toList();
+    List<double> iAmount =
+        _sharedRatio.map((e) => double.parse((value * e / _sharedRatio.sum).toStringAsFixed(2))).toList();
+
     double diff = value;
     for (double e in iAmount) {
       diff -= e;
@@ -375,7 +452,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
 
     if (diff != 0) {
       for (int i = 0; i < _users.length; i++) {
-        if (_checkList[i]) {
+        if (_sharedRatio[i] != 0) {
           iAmount[i] += diff;
           break;
         }
