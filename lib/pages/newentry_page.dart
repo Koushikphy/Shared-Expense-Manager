@@ -3,11 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:shared_expenses/scoped_model/expenseScope.dart';
-// import 'package:shared_expenses/pages/share_page.dart';
 import 'package:shared_expenses/theme/colors.dart';
 import 'package:scoped_model/scoped_model.dart';
-// import 'package:flutter_spinbox/flutter_spinbox.dart';
-// import 'package:flutter_touch_spin/flutter_touch_spin.dart';
 import 'package:collection/collection.dart';
 
 class NewEntryLog extends StatefulWidget {
@@ -73,11 +70,15 @@ class _NewEntryLogState extends State<NewEntryLog> {
           }
         }
       }
+      _sharedRatio = _users
+          .map((e) => double.parse(
+              (double.parse(shareList[e]) * _users.length / double.parse(data['amount'])).toStringAsFixed(2)))
+          .toList();
     } else {
       shareList = {for (var u in model.getUsers) u: "0.00"};
+      _sharedRatio = _users.map((e) => 1.0).toList();
     }
     _shareControler = _users.map((e) => TextEditingController(text: shareList[e])).toList();
-    _sharedRatio = _users.map((e) => 1.00).toList();
   }
 
   @override
@@ -264,6 +265,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                               color: _sharedRatio[index] == 0 ? Colors.black12 : Colors.black,
                                               icon: const Icon(Icons.remove_circle_outline),
                                               onPressed: () {
+                                                if (_amountEditor.text.trim().isEmpty ||
+                                                    double.parse(_amountEditor.text) == 0) return;
                                                 if (_sharedRatio[index] > 0) {
                                                   _sharedRatio[index] -= 1;
                                                   updateSharingDetails();
@@ -281,6 +284,8 @@ class _NewEntryLogState extends State<NewEntryLog> {
                                               icon: const Icon(Icons.add_circle_outline),
                                               onPressed: () {
                                                 if (_sharedRatio[index] < 99) {
+                                                  if (_amountEditor.text.trim().isEmpty ||
+                                                      double.parse(_amountEditor.text) == 0) return;
                                                   _sharedRatio[index] += 1;
                                                   updateSharingDetails();
                                                 }
@@ -412,24 +417,27 @@ class _NewEntryLogState extends State<NewEntryLog> {
   }
 
   sharedProperly() {
+    double val = double.parse(_amountEditor.text);
+    if (val == null) return false;
+
     for (int i = 0; i < _users.length; i++) {
       shareList[_users[i]] = double.parse(_shareControler[i].text).toStringAsFixed(2);
     }
-    // print(shareList);
-    double summed = 0;
-    for (String v in shareList.values) {
-      summed += double.parse(v);
-    }
 
-    double val = double.parse(_amountEditor.text);
-    if (val == null) return false;
+    List<double> sharedAmount = _users.map((e) => double.parse(shareList[e])).toList(); //
+    double summed = sharedAmount.sum;
+    int len = _users.length;
+
     if (summed == val) {
+      _sharedRatio = sharedAmount.map((e) => double.parse((e * len / summed).toStringAsFixed(2))).toList();
       showError = false;
+      setState(() {});
+
       return true;
     } else {
-      setState(() {
-        showError = true;
-      });
+      showError = true;
+      setState(() {});
+
       return false;
     }
   }
@@ -440,6 +448,9 @@ class _NewEntryLogState extends State<NewEntryLog> {
   // }
 
   updateSharingDetails() {
+    if (_amountEditor.text.trim().isEmpty) {
+      return;
+    }
     double value = double.parse(_amountEditor.text);
 
     List<double> iAmount =
