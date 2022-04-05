@@ -407,6 +407,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
     // _categoryEditor.clear();
     // _dateEditor.text = DateTime.now().toString();
     shareList = {for (var u in model.getUsers) u: "0.00"};
+    _sharedRatio = _users.map((e) => 1.0).toList();
     // _checkList = _users.map((_) => false).toList();
     for (TextEditingController e in _shareControler) {
       e.text = "0.00";

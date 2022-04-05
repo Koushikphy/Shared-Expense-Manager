@@ -6,13 +6,11 @@ import 'package:shared_expenses/scoped_model/expenseScope.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-// import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_expenses/pages/addUser_page.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:animations/animations.dart';
-// import 'package:share/share.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -260,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   var _url = 'https://github.com/Koushikphy/Shared-Expense-Manager';
   void _launchURL() async {
-    await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
+    if (!await launch(_url)) throw 'Could not launch $_url';
   }
 
   bool notContains(List<String> source, List<String> dest) {
