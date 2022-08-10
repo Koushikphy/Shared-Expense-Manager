@@ -100,7 +100,7 @@ class _AddUserCatState extends State<AddUserCat> {
               },
             ),
             TextButton(
-              child: Text('Cancle'),
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

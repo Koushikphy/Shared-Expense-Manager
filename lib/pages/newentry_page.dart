@@ -357,7 +357,7 @@ class _NewEntryLogState extends State<NewEntryLog> {
             TextButton(
               onPressed: clearForm,
               child: Text(
-                "Save & Add anoter",
+                "Save & Add another",
                 style: TextStyle(fontSize: 18, color: Colors.deepPurple),
               ),
             ),

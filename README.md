@@ -17,8 +17,8 @@
 
 ![Mock picture](assets/images/mock.png)  
 
-A Simeple app for managing group shared expenses. Just add users group and categories, and enter individual expense records to keep track of the group shares.  
-Built with [Flutter](https://flutter.dev/) framework, this app can be compiled for both Andoroid and iOS.
+A Simple app for managing group shared expenses. Just add users group and categories, and enter individual expense records to keep track of the group shares.  
+Built with [Flutter](https://flutter.dev/) framework, this app can be compiled for both Android and iOS.
 
 ### Usage 
 * **Download** the app from the [release section](https://github.com/Koushikphy/Shared-Expense-Manager/releases).
@@ -60,7 +60,7 @@ Built with [Flutter](https://flutter.dev/) framework, this app can be compiled f
 13. - [x] Mocks for presentation 
 13. - [x] First sharable production build.
 14. - [ ] Introduce search functionality to the log page.
-15. - [x] Separate data into months and a provide a option to set it.
+15. - [x] Separate data into months and a provided option to set it.
 2. - [x] Add new entry without leaving the page.
 1. - [x] Share image white background with top bar
 15. - [ ] Firebase authentication to sync between multiple devices.  
